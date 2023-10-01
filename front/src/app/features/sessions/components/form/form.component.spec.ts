@@ -30,7 +30,7 @@ describe('FormComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([]),
         HttpClientModule,
         MatCardModule,
         MatIconModule,
@@ -51,7 +51,7 @@ describe('FormComponent', () => {
     fixture = TestBed.createComponent(FormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    router = TestBed.get(Router);
+    router = TestBed.inject(Router);
   });
 
   it('should create', () => {
