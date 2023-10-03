@@ -47,8 +47,7 @@ public class TeacherServiceTest {
     @Test
     public void testFindTeacher() {
         Teacher mockTeacher=Teacher.builder().firstName("Prenom").lastName("Nom").build();
-
-        when(teacherRepository.findById(1L)).thenReturn(Optional.of(mockTeacher));
+        when(teacherRepository.findById(1L)).thenReturn(Optional.of(teachers.get(1)));
 
         Teacher teacher=teacherService.findById(1L);
         assertThat(teacher).isEqualTo(mockTeacher);
