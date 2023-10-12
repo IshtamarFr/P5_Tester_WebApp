@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -25,10 +27,15 @@ public class SessionServiceTest {
         verify(sessionRepository,times(1)).save(session);
     }
 
-    @Test void testKillSession() {
+    @Test
+    public void testKillSession() {
         sessionService.delete(1L);
         verify(sessionRepository,times(1)).deleteById(1L);
     }
 
-    //TODO: Finish all tests for sessionService
+    @Test
+    public void testGetAllSessions() {
+        List<Session> sessions=sessionService.findAll();
+        verify(sessionRepository,times(1)).findAll();
+    }
 }
