@@ -34,7 +34,6 @@ public class UserAuthIT {
 
     @Test
     public void testRegisterUser() throws Exception {
-        //Step 1: create a mockUser and register them
         SignupRequest signupRequest=new SignupRequest();
         signupRequest.setEmail("mockNewUser@test.com");
         signupRequest.setFirstName("mockFirstName");
