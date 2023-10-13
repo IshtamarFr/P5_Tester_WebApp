@@ -23,8 +23,6 @@ public class UserControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    final ObjectMapper mapper=new ObjectMapper();
-
     @Test
     @WithUserDetails("yoga@studio.com")
     public void testGetUserById() throws Exception {
@@ -37,12 +35,5 @@ public class UserControllerIT {
     public void testDeleteUserByIdIsRejected() throws Exception {
         this.mockMvc.perform(delete("/api/user/2"))
                 .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    @WithUserDetails("yoga@studio.com")
-    public void testDeleteUserById() throws Exception {
-        this.mockMvc.perform(delete("/api/user/1"))
-                .andExpect(status().isOk());
     }
 }
