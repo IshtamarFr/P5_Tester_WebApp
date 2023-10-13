@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.starterjwt.mapper.SessionMapper;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
+import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.services.SessionService;
+import com.openclassrooms.starterjwt.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,8 +43,11 @@ public class SessionControllerTest {
 
     @MockBean
     SessionService sessionService;
+    @MockBean
+    UserService userService;
 
     Session mockSession;
+    User mockUser;
 
     final ObjectMapper mapper=new ObjectMapper();
 
@@ -55,6 +60,14 @@ public class SessionControllerTest {
         mockTeacher.setId(1L);
         mockTeacher.setFirstName("mockFN");
         mockTeacher.setLastName("mockLN");
+
+        mockUser=new User();
+        mockUser.setId(999L);
+        mockUser.setFirstName("Tickle");
+        mockUser.setLastName("Monster");
+        mockUser.setEmail("scp999@scpfundation.com");
+        mockUser.setAdmin(false);
+        mockUser.setPassword("999999");
 
         mockSession = new Session();
         mockSession.setId(42L);
@@ -130,5 +143,27 @@ public class SessionControllerTest {
         this.mockMvc.perform(delete("/api/session/42"))
                 .andExpect(status().isOk());
         verify(sessionService,times(1)).delete(42L);
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testAddUserToSession() throws Exception {
+        when(sessionService.getById(42L)).thenReturn(mockSession);
+        when(userService.findById(999L)).thenReturn(mockUser);
+
+        this.mockMvc.perform(post("/api/session/42/participate/999"))
+                .andExpect(status().isOk());
+        verify(sessionService,times(1)).participate(42L,999L);
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testRemoveUserToSession() throws Exception {
+        when(sessionService.getById(42L)).thenReturn(mockSession);
+        when(userService.findById(999L)).thenReturn(mockUser);
+
+        this.mockMvc.perform(delete("/api/session/42/participate/999"))
+                .andExpect(status().isOk());
+        verify(sessionService,times(1)).noLongerParticipate(42L,999L);
     }
 }
