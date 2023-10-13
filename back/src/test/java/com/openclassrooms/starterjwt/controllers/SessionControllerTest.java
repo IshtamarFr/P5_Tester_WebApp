@@ -18,15 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -99,5 +97,38 @@ public class SessionControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(sessionService,times(1)).create(mockSession);
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testModifySession() throws Exception {
+        when(sessionService.update(42L, mockSession)).thenReturn(mockSession);
+
+        this.mockMvc.perform(put("/api/session/42")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(sessionMapper.toDto(mockSession)))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(sessionService,times(1)).update(42L,mockSession);
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testModifySessionBadRequest() throws Exception {
+        this.mockMvc.perform(put("/api/session/42A")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(sessionMapper.toDto(mockSession)))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testDeleteSession() throws Exception {
+        when(sessionService.getById(42L)).thenReturn(mockSession);
+
+        this.mockMvc.perform(delete("/api/session/42"))
+                .andExpect(status().isOk());
+        verify(sessionService,times(1)).delete(42L);
     }
 }
