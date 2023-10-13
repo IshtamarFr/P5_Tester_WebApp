@@ -1,5 +1,7 @@
 package com.openclassrooms.starterjwt.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassrooms.starterjwt.mapper.SessionMapper;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.services.SessionService;
@@ -12,17 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,10 +46,15 @@ public class SessionControllerTest {
 
     Session mockSession;
 
+    final ObjectMapper mapper=new ObjectMapper();
+
+    @Autowired
+    SessionMapper sessionMapper;
+
     @BeforeEach
     public void init() {
         Teacher mockTeacher=new Teacher();
-        mockTeacher.setId(99L);
+        mockTeacher.setId(1L);
         mockTeacher.setFirstName("mockFN");
         mockTeacher.setLastName("mockLN");
 
@@ -55,7 +64,6 @@ public class SessionControllerTest {
         mockSession.setDate(new Date());
         mockSession.setTeacher(mockTeacher);
         mockSession.setDescription("The mockest session");
-
     }
 
     @Test
@@ -80,5 +88,16 @@ public class SessionControllerTest {
                 .andExpect(content().string(containsString("mockest")));
     }
 
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testCreateSession() throws Exception {
+        when(sessionService.create(mockSession)).thenReturn(mockSession);
 
+        this.mockMvc.perform(post("/api/session/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(sessionMapper.toDto(mockSession)))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(sessionService,times(1)).create(mockSession);
+    }
 }
