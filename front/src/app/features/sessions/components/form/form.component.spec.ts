@@ -10,11 +10,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
-import { SessionService } from 'src/app/services/session.service';
 import { SessionApiService } from '../../services/session-api.service';
 
 import { FormComponent } from './form.component';
 import { Router } from '@angular/router';
+import { SessionService } from '../../../../services/session.service';
 
 describe('FormComponent', () => {
   let component: FormComponent;
