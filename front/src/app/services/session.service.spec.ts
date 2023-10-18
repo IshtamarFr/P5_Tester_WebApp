@@ -22,6 +22,10 @@ describe('SessionService', () => {
     service = TestBed.inject(SessionService);
   });
 
+  it('shouldnt be logged', () => {
+    expect(service.$isLogged()).not.toBeTruthy;
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });

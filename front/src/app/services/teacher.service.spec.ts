@@ -1,4 +1,3 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { expect } from '@jest/globals';
 import {
@@ -7,19 +6,17 @@ import {
 } from '@angular/common/http/testing';
 
 import { TeacherService } from './teacher.service';
-import { Teacher } from '../interfaces/teacher.interface';
 
 describe('TeacherService', () => {
   let service: TeacherService;
-  let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
+      providers: [TeacherService],
     });
     service = TestBed.inject(TeacherService);
-    httpClient = TestBed.inject(HttpClient);
     httpTestingController = TestBed.inject(HttpTestingController);
   });
 
@@ -32,22 +29,14 @@ describe('TeacherService', () => {
   });
 
   it('should get all teachers', () => {
-    const response: Teacher[] = [
-      {
-        id: 42,
-        lastName: 'mockLastName',
-        firstName: 'mockFirstName',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ];
-
-    httpClient
-      .get<Teacher[]>(service['pathService'])
-      .subscribe((data) => expect(data).toEqual(response));
-
+    service.all().subscribe();
     const req = httpTestingController.expectOne(service['pathService']);
     expect(req.request.method).toEqual('GET');
-    req.flush(response);
+  });
+
+  it('should get teacher by id', () => {
+    service.detail('42').subscribe();
+    const req = httpTestingController.expectOne(service['pathService'] + '/42');
+    expect(req.request.method).toEqual('GET');
   });
 });
