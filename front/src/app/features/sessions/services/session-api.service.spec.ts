@@ -53,4 +53,28 @@ describe('SessionsService', () => {
     const req = httpTestingController.expectOne(service['pathService']);
     expect(req.request.method).toEqual('POST');
   });
+
+  it('update a session', () => {
+    service.update('999', mockSession).subscribe();
+    const req = httpTestingController.expectOne(
+      service['pathService'] + '/999'
+    );
+    expect(req.request.method).toEqual('PUT');
+  });
+
+  it('participates works', () => {
+    service.participate('1', '999').subscribe();
+    const req = httpTestingController.expectOne(
+      service['pathService'] + '/1/participate/999'
+    );
+    expect(req.request.method).toEqual('POST');
+  });
+
+  it('unParticipates works', () => {
+    service.unParticipate('1', '999').subscribe();
+    const req = httpTestingController.expectOne(
+      service['pathService'] + '/1/participate/999'
+    );
+    expect(req.request.method).toEqual('DELETE');
+  });
 });
