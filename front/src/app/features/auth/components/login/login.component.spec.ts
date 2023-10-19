@@ -11,6 +11,7 @@ import { expect } from '@jest/globals';
 
 import { LoginComponent } from './login.component';
 import { SessionService } from '../../../../services/session.service';
+import { AuthService } from '../../services/auth.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -19,7 +20,7 @@ describe('LoginComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
-      providers: [SessionService],
+      providers: [SessionService, AuthService],
       imports: [
         RouterTestingModule,
         BrowserAnimationsModule,

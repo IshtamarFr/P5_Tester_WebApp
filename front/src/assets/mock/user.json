@@ -1,0 +1,22 @@
+[
+  {
+    "id": 682,
+    "email": "scp682@scp.com",
+    "lastName": "HardToDestroy",
+    "firstName": "Reptile",
+    "admin": true,
+    "password": "123456",
+    "createdAt": "2013-10-21T13:28:06.419Z",
+    "updatedAt": "2013-10-21T13:58:06.000Z"
+  },
+  {
+    "id": 999,
+    "email": "scp999@scp.com",
+    "lastName": "Tickle",
+    "firstName": "Monster",
+    "admin": false,
+    "password": "123456",
+    "createdAt": "2018-10-21T13:28:06.419Z",
+    "updatedAt": "2018-10-21T13:58:06.000Z"
+  }
+]
