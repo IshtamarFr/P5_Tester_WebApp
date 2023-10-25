@@ -16,6 +16,8 @@ import { FormComponent } from './form.component';
 import { Router } from '@angular/router';
 import { SessionService } from '../../../../services/session.service';
 import { routes } from '../../../../app-routing.module';
+import { Session } from '../../interfaces/session.interface';
+import { of } from 'rxjs';
 
 describe('FormComponent', () => {
   let component: FormComponent;
@@ -28,6 +30,14 @@ describe('FormComponent', () => {
     sessionInformation: {
       admin: true,
     },
+  };
+
+  const mockSession: Session = {
+    name: 'mockName',
+    description: 'mockDescription',
+    date: new Date(),
+    teacher_id: 1,
+    users: [],
   };
 
   beforeEach(async () => {
@@ -77,10 +87,15 @@ describe('FormComponent', () => {
   it('should redirect non admin on update', () => {
     let navigateSpy = jest.spyOn(router, 'navigate');
     mockSessionService.sessionInformation.admin = false;
+    let sessionApiServiceSpy = jest
+      .spyOn(sessionApiService, 'detail')
+      .mockReturnValue(of(mockSession));
+
     jest.spyOn(router, 'url', 'get').mockReturnValue('/sessions/update/42');
     component.ngOnInit();
     expect(navigateSpy).toHaveBeenCalledWith(['/sessions']);
     expect(component['onUpdate']).toBe(true);
+    expect(sessionApiServiceSpy).toHaveBeenCalled();
   });
 
   it('should leave page', () => {
@@ -90,13 +105,17 @@ describe('FormComponent', () => {
   });
 
   it('should submit form on create', () => {
-    let sessionApiServiceSpy = jest.spyOn(sessionApiService, 'create');
+    let sessionApiServiceSpy = jest
+      .spyOn(sessionApiService, 'create')
+      .mockReturnValue(of(mockSession));
     component.submit();
     expect(sessionApiServiceSpy).toHaveBeenCalled();
   });
 
   it('should submit form on update', () => {
-    let sessionApiServiceSpy = jest.spyOn(sessionApiService, 'update');
+    let sessionApiServiceSpy = jest
+      .spyOn(sessionApiService, 'update')
+      .mockReturnValue(of(mockSession));
     component['onUpdate'] = true;
     component.submit();
     expect(sessionApiServiceSpy).toHaveBeenCalled();
