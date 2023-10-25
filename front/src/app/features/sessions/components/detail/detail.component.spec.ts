@@ -13,6 +13,7 @@ import { SessionApiService } from '../../services/session-api.service';
 
 describe('DetailComponent', () => {
   let component: DetailComponent;
+  let sessionApiService: SessionApiService;
   let fixture: ComponentFixture<DetailComponent>;
   let router: Router;
   let navigateSpy: jest.SpyInstance<Promise<Boolean>>;
@@ -33,16 +34,14 @@ describe('DetailComponent', () => {
         ReactiveFormsModule,
       ],
       declarations: [DetailComponent],
-      providers: [
-        { provide: SessionService, useValue: mockSessionService },
-        SessionApiService,
-      ],
+      providers: [{ provide: SessionService, useValue: mockSessionService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     router = TestBed.inject(Router);
+    sessionApiService = TestBed.inject(SessionApiService);
     navigateSpy = jest.spyOn(router, 'navigate');
   });
 
@@ -58,7 +57,9 @@ describe('DetailComponent', () => {
   });
 
   it('should init', () => {
-    component['sessionId'] = '52';
+    let sessionApiServiceSpy = jest.spyOn(sessionApiService, 'detail');
+    component['sessionId'] = '42';
     component.ngOnInit();
+    expect(sessionApiServiceSpy).toHaveBeenCalledWith('42');
   });
 });
