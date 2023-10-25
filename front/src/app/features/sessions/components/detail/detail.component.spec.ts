@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NgControl, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
@@ -9,6 +9,7 @@ import { SessionService } from '../../../../services/session.service';
 import { DetailComponent } from './detail.component';
 import { routes } from '../../../../app-routing.module';
 import { Router } from '@angular/router';
+import { SessionApiService } from '../../services/session-api.service';
 
 describe('DetailComponent', () => {
   let component: DetailComponent;
@@ -32,7 +33,10 @@ describe('DetailComponent', () => {
         ReactiveFormsModule,
       ],
       declarations: [DetailComponent],
-      providers: [{ provide: SessionService, useValue: mockSessionService }],
+      providers: [
+        { provide: SessionService, useValue: mockSessionService },
+        SessionApiService,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailComponent);
@@ -44,5 +48,17 @@ describe('DetailComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should get back', () => {
+    jest.spyOn(component, 'back');
+    component.back();
+    expect(component.back).toBeDefined();
+    expect(component.back).toHaveBeenCalled();
+  });
+
+  it('should init', () => {
+    component['sessionId'] = '52';
+    component.ngOnInit();
   });
 });

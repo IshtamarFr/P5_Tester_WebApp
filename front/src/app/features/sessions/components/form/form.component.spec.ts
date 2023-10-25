@@ -22,6 +22,7 @@ describe('FormComponent', () => {
   let fixture: ComponentFixture<FormComponent>;
   let router: Router;
   let navigateSpy: jest.SpyInstance<Promise<Boolean>>;
+  let sessionApiService: SessionApiService;
 
   const mockSessionService = {
     sessionInformation: {
@@ -43,10 +44,7 @@ describe('FormComponent', () => {
         MatSelectModule,
         NoopAnimationsModule,
       ],
-      providers: [
-        { provide: SessionService, useValue: mockSessionService },
-        SessionApiService,
-      ],
+      providers: [{ provide: SessionService, useValue: mockSessionService }],
       declarations: [FormComponent],
     }).compileComponents();
 
@@ -55,6 +53,7 @@ describe('FormComponent', () => {
     fixture.detectChanges();
     router = TestBed.inject(Router);
     navigateSpy = jest.spyOn(router, 'navigate');
+    sessionApiService = TestBed.inject(SessionApiService);
   });
 
   it('should create', () => {
@@ -88,13 +87,15 @@ describe('FormComponent', () => {
   });
 
   it('should submit form on create', () => {
+    let sessionApiServiceSpy = jest.spyOn(sessionApiService, 'create');
     component.submit();
-    expect(SessionApiService).toHaveBeenCalled;
+    expect(sessionApiServiceSpy).toHaveBeenCalled();
   });
 
   it('should submit form on update', () => {
+    let sessionApiServiceSpy = jest.spyOn(sessionApiService, 'update');
     component['onUpdate'] = true;
     component.submit();
-    expect(SessionApiService).toHaveBeenCalled;
+    expect(sessionApiServiceSpy).toHaveBeenCalled();
   });
 });
