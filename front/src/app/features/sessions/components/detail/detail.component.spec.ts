@@ -51,10 +51,10 @@ describe('DetailComponent', () => {
   });
 
   it('should get back', () => {
-    jest.spyOn(component, 'back');
+    let componentBack = jest.spyOn(component, 'back');
     component.back();
-    expect(component.back).toBeDefined();
-    expect(component.back).toHaveBeenCalled();
+    expect(componentBack).toBeDefined();
+    expect(componentBack).toHaveBeenCalled();
   });
 
   it('should init', () => {

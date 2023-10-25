@@ -52,7 +52,6 @@ describe('FormComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     router = TestBed.inject(Router);
-    navigateSpy = jest.spyOn(router, 'navigate');
     sessionApiService = TestBed.inject(SessionApiService);
   });
 
@@ -61,12 +60,14 @@ describe('FormComponent', () => {
   });
 
   it('should redirect non admin', () => {
+    let navigateSpy = jest.spyOn(router, 'navigate');
     mockSessionService.sessionInformation.admin = false;
     component.ngOnInit();
     expect(navigateSpy).toHaveBeenCalledWith(['/sessions']);
   });
 
   it('should not redirect admin on update', () => {
+    let navigateSpy = jest.spyOn(router, 'navigate');
     mockSessionService.sessionInformation.admin = true;
     jest.spyOn(router, 'url', 'get').mockReturnValue('/sessions/update/42');
     component.ngOnInit();
@@ -74,6 +75,7 @@ describe('FormComponent', () => {
   });
 
   it('should redirect non admin on update', () => {
+    let navigateSpy = jest.spyOn(router, 'navigate');
     mockSessionService.sessionInformation.admin = false;
     jest.spyOn(router, 'url', 'get').mockReturnValue('/sessions/update/42');
     component.ngOnInit();
@@ -82,6 +84,7 @@ describe('FormComponent', () => {
   });
 
   it('should leave page', () => {
+    let navigateSpy = jest.spyOn(router, 'navigate');
     component['exitPage']('test');
     expect(navigateSpy).toHaveBeenCalledWith(['sessions']);
   });
