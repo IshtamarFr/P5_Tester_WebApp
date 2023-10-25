@@ -52,25 +52,28 @@ public class SessionControllerTest {
 
     @BeforeEach
     public void init() {
-        Teacher mockTeacher=new Teacher();
-        mockTeacher.setId(1L);
-        mockTeacher.setFirstName("mockFN");
-        mockTeacher.setLastName("mockLN");
+        Teacher mockTeacher=Teacher.builder()
+                .id(1L)
+                .firstName("mockFN")
+                .lastName("mockLN")
+                .build();
 
-        mockUser=new User();
-        mockUser.setId(999L);
-        mockUser.setFirstName("Tickle");
-        mockUser.setLastName("Monster");
-        mockUser.setEmail("scp999@scpfundation.com");
-        mockUser.setAdmin(false);
-        mockUser.setPassword("999999");
+        mockUser=User.builder()
+                .id(999L)
+                .firstName("Tickle")
+                .lastName("Monster")
+                .email("scp999@scpfundation.com")
+                .admin(false)
+                .password("999999")
+                .build();
 
-        mockSession = new Session();
-        mockSession.setId(42L);
-        mockSession.setName("mock Session");
-        mockSession.setDate(new Date());
-        mockSession.setTeacher(mockTeacher);
-        mockSession.setDescription("The mockest session");
+        mockSession = Session.builder()
+                .id(42L)
+                .name("mock Session")
+                .date(new Date())
+                .teacher(mockTeacher)
+                .description("The mockest session")
+                .build();
     }
 
     @Test

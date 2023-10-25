@@ -34,11 +34,12 @@ public class UserAuthIT {
 
     @Test
     public void testRegisterUser() throws Exception {
-        SignupRequest signupRequest=new SignupRequest();
-        signupRequest.setEmail("mockNewUser@test.com");
-        signupRequest.setFirstName("mockFirstName");
-        signupRequest.setLastName("mockLastName");
-        signupRequest.setPassword("123456789");
+        SignupRequest signupRequest=SignupRequest.builder()
+                .email("mockNewUser@test.com")
+                .firstName("mockFirstName")
+                .lastName("mockLastName")
+                .password("123456789")
+                .build();
 
         this.mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)

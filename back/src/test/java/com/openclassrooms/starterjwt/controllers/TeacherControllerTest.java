@@ -39,15 +39,17 @@ public class TeacherControllerTest {
 
     @BeforeEach
     public void init() {
-        mockTeacher1=new Teacher();
-        mockTeacher1.setId(106L);
-        mockTeacher1.setFirstName("TheOld");
-        mockTeacher1.setLastName("Man");
+        mockTeacher1=Teacher.builder()
+                .id(106L)
+                .firstName("TheOld")
+                .lastName("Man")
+                .build();
 
-        mockTeacher2=new Teacher();
-        mockTeacher2.setId(682L);
-        mockTeacher2.setFirstName("HardToDestroy");
-        mockTeacher2.setLastName("Reptile");
+        mockTeacher2=Teacher.builder()
+                .id(682L)
+                .firstName("HardToDestroy")
+                .lastName("Reptile")
+                .build();
 
         teachers=new ArrayList<>();
         teachers.add(mockTeacher1);

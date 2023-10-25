@@ -1,7 +1,10 @@
 package com.openclassrooms.starterjwt.payload.request;
 
+import lombok.Builder;
+
 import javax.validation.constraints.NotBlank;
 
+@Builder
 public class LoginRequest {
 	@NotBlank
   private String email;
