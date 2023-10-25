@@ -23,7 +23,6 @@ describe('FormComponent', () => {
   let component: FormComponent;
   let fixture: ComponentFixture<FormComponent>;
   let router: Router;
-  let navigateSpy: jest.SpyInstance<Promise<Boolean>>;
   let sessionApiService: SessionApiService;
 
   const mockSessionService = {
