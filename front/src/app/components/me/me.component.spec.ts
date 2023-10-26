@@ -1,5 +1,10 @@
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,6 +18,7 @@ import { Router } from '@angular/router';
 import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
 import { of } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('MeComponent', () => {
   let component: MeComponent;
@@ -35,6 +41,7 @@ describe('MeComponent', () => {
       admin: true,
       id: 1,
     },
+    logOut(): void {},
   };
 
   beforeEach(async () => {
@@ -49,6 +56,7 @@ describe('MeComponent', () => {
         MatIconModule,
         MatInputModule,
         RouterTestingModule,
+        NoopAnimationsModule,
       ],
     }).compileComponents();
 
@@ -71,5 +79,22 @@ describe('MeComponent', () => {
     component.ngOnInit();
     expect(component['user']?.firstName).toBe('mockFN');
     expect(userServiceSpy).toHaveBeenCalledWith('1');
+  });
+
+  it('should get back', () => {
+    let componentBack = jest.spyOn(component, 'back');
+    component.back();
+    expect(componentBack).toBeDefined();
+    expect(componentBack).toHaveBeenCalled();
+  });
+
+  it('should delete user', () => {
+    let userServiceSpy = jest
+      .spyOn(userService, 'delete')
+      .mockReturnValue(of(void 0));
+    let navigateSpy = jest.spyOn(router, 'navigate');
+    component.delete();
+    expect(userServiceSpy).toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledWith(['/']);
   });
 });
