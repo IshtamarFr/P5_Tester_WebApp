@@ -1,5 +1,9 @@
 <div class="app">
-  <mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-toolbar
+    color="primary"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
     <span>Yoga app</span>
     <div *ngIf="$isLogged() | async; else notLogged">
       <span routerLink="sessions" class="link">Sessions</span>
@@ -8,8 +12,12 @@
     </div>
     <ng-template #notLogged>
       <div>
-        <span routerLink="login" class="link">Login</span>
-        <span routerLink="register" class="link">Register</span>
+        <span routerLink="login" class="link" data-test-id="navbar-login"
+          >Login</span
+        >
+        <span routerLink="register" class="link" data-test-id="navbar-register"
+          >Register</span
+        >
       </div>
     </ng-template>
   </mat-toolbar>

@@ -5,6 +5,9 @@ describe('Login spec', () => {
   });
 
   it('click on Login should redirect to login', () => {
-    //TODO: to continue here
+    cy.visit('');
+    cy.get('[data-test-id="navbar-login"]').should('exist');
+    cy.get('[data-test-id="navbar-login"]').click();
+    cy.url().should('contain', 'login');
   });
 });
