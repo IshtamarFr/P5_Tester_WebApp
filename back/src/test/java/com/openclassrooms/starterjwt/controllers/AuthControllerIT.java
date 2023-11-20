@@ -28,7 +28,11 @@ public class AuthControllerIT {
 
     @Test
     public void testLoginAdmin() throws Exception {
-        LoginRequest loginRequest=LoginRequest.builder().email("yoga@studio.com").password("test!1234").build();
+        LoginRequest loginRequest=LoginRequest.builder()
+                .email("yoga@studio.com")
+                .password("test!1234")
+                .build();
+
         this.mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(loginRequest))
