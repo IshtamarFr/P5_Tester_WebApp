@@ -165,4 +165,29 @@ public class SessionControllerTest {
                 .andExpect(status().isOk());
         verify(sessionService,times(1)).noLongerParticipate(42L,999L);
     }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testDeleteSessionAsNull() throws Exception {
+        when(sessionService.getById(682L)).thenReturn(null);
+
+        this.mockMvc.perform(delete("/api/session/682"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testDeleteParticipationAsNaN() throws Exception {
+        this.mockMvc.perform(delete("/api/session/8/participate/*68847--"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testPostParticipationAsNaN() throws Exception {
+        this.mockMvc.perform(post("/api/session/*68847--/participate/5"))
+                .andExpect(status().isBadRequest());
+    }
+
+
 }

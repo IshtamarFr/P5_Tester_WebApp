@@ -83,4 +83,20 @@ public class TeacherControllerTest {
         this.mockMvc.perform(get("/api/teacher/682"))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testGetTeacherAsNull() throws Exception {
+        when(teacherService.findById(9999L)).thenReturn(null);
+
+        this.mockMvc.perform(get("/api/teacher/9999"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testGetTeacherAsNonValid() throws Exception {
+        this.mockMvc.perform(get("/api/teacher/1ABCD"))
+                .andExpect(status().isBadRequest());
+    }
 }

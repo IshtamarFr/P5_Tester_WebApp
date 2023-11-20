@@ -12,6 +12,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,5 +33,28 @@ public class UserControllerTest {
 
         this.mockMvc.perform(get("/api/user/1"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testGetUserNaN() throws Exception {
+        this.mockMvc.perform(get("/api/user/AAA"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testDeleteUserByIdNullUser() throws Exception {
+        when(userService.findById(42L)).thenReturn(null);
+
+        this.mockMvc.perform(delete("/api/user/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails("yoga@studio.com")
+    public void testDeleteUserNaN() throws Exception {
+        this.mockMvc.perform(delete("/api/user/AAA"))
+                .andExpect(status().isBadRequest());
     }
 }
