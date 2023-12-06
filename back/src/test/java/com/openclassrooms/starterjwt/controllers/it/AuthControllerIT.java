@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,9 +34,7 @@ public class AuthControllerIT {
 
         this.mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(loginRequest))
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
+                .content(mapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("dmin")))
                 .andExpect(content().string(containsString("true")));

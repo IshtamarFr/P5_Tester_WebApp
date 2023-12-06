@@ -17,9 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,7 +38,6 @@ public class TeacherControllerTest {
 
     @BeforeEach
     public void init() {
-        //given
         mockTeacher1=Teacher.builder()
                 .id(106L)
                 .firstName("TheOld")
@@ -59,47 +57,70 @@ public class TeacherControllerTest {
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testGetAllTeachers() throws Exception {
-        //when
+    public void testGetAllTeachersIsOkAndCallService() throws Exception {
+        //Given
         when(teacherService.findAll()).thenReturn(teachers);
 
-        //then
+        //When
         this.mockMvc.perform(get("/api/teacher"))
-                .andDo(print())
+
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("HardToDestroy")))
                 .andExpect(content().string(containsString("TheOld")));
+        verify(teacherService,times(1)).findAll();
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testGetTeacherById() throws Exception {
+    public void testGetTeacherByIdIsOkAndCallService() throws Exception {
+        //Given
         when(teacherService.findById(682L)).thenReturn(mockTeacher2);
 
+        //When
         this.mockMvc.perform(get("/api/teacher/682"))
+
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Reptile")));
+        verify(teacherService,times(1)).findById(682L);
     }
 
     @Test
     public void testGetTeacherByIdIsUnauthorized() throws Exception {
+        //Given
+
+        //When
         this.mockMvc.perform(get("/api/teacher/682"))
+
+        //Then
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testGetTeacherAsNull() throws Exception {
+    public void testGetTeacherAsNullIsNotFoundAndDontCallService() throws Exception {
+        //Given
         when(teacherService.findById(9999L)).thenReturn(null);
 
+        //When
         this.mockMvc.perform(get("/api/teacher/9999"))
+
+        //Then
                 .andExpect(status().isNotFound());
+        verify(teacherService,times(1)).findById(9999L);
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testGetTeacherAsNonValid() throws Exception {
+    public void testGetTeacherAsNaNIsBadRequestAndDontCallService() throws Exception {
+        //Given
+
+        //When
         this.mockMvc.perform(get("/api/teacher/1ABCD"))
+
+        //Then
                 .andExpect(status().isBadRequest());
+        verify(teacherService,times(0)).findById(any());
     }
 }

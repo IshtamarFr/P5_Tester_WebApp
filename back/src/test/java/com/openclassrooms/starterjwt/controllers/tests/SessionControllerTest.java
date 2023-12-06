@@ -26,7 +26,6 @@ import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -78,115 +77,166 @@ public class SessionControllerTest {
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testGetAllSessions() throws Exception {
+    public void testGetAllSessionsWorksAndCallService() throws Exception {
+        //Given
         List<Session>sessions=new ArrayList<>();
         sessions.add(mockSession);
         when(sessionService.findAll()).thenReturn(sessions);
 
+        //When
         this.mockMvc.perform(get("/api/session/"))
-                .andDo(print())
+
+        //Then
                 .andExpect(status().isOk());
+        verify(sessionService,times(1)).findAll();
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testGetSessionById() throws Exception {
+    public void testGetSessionByIdIsOkAndCallService() throws Exception {
+        //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
 
+        //When
         this.mockMvc.perform(get("/api/session/42"))
+
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("mockest")));
+        verify(sessionService,times(1)).getById(42L);
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testCreateSession() throws Exception {
+    public void testCreateSessionIsOkAndCallService() throws Exception {
+        //Given
         when(sessionService.create(mockSession)).thenReturn(mockSession);
 
+        //When
         this.mockMvc.perform(post("/api/session/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(sessionMapper.toDto(mockSession)))
-                .accept(MediaType.APPLICATION_JSON))
+                .content(mapper.writeValueAsString(sessionMapper.toDto(mockSession))))
+        //Then
                 .andExpect(status().isOk());
         verify(sessionService,times(1)).create(mockSession);
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testModifySession() throws Exception {
+    public void testModifySessionIsOkAndCallService() throws Exception {
+        //Given
         when(sessionService.update(42L, mockSession)).thenReturn(mockSession);
 
+        //When
         this.mockMvc.perform(put("/api/session/42")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sessionMapper.toDto(mockSession)))
                 .accept(MediaType.APPLICATION_JSON))
+
+        //Then
                 .andExpect(status().isOk());
         verify(sessionService,times(1)).update(42L,mockSession);
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testModifySessionBadRequest() throws Exception {
+    public void testModifySessionWithNaNIsBadRequestDontCallService() throws Exception {
+        //Given
+
+        //When
         this.mockMvc.perform(put("/api/session/42A")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sessionMapper.toDto(mockSession)))
                 .accept(MediaType.APPLICATION_JSON))
+
+        //Then
                 .andExpect(status().isBadRequest());
+        verify(sessionService,times(0)).update(42L,mockSession);
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testDeleteSession() throws Exception {
+    public void testDeleteSessionIsOkAndCallService() throws Exception {
+        //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
 
+        //When
         this.mockMvc.perform(delete("/api/session/42"))
+
+        //Then
                 .andExpect(status().isOk());
         verify(sessionService,times(1)).delete(42L);
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testAddUserToSession() throws Exception {
+    public void testAddUserToSessionIsOkAndCallService() throws Exception {
+        //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
         when(userService.findById(999L)).thenReturn(mockUser);
 
+        //When
         this.mockMvc.perform(post("/api/session/42/participate/999"))
+
+        //Then
                 .andExpect(status().isOk());
         verify(sessionService,times(1)).participate(42L,999L);
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testRemoveUserToSession() throws Exception {
+    public void testRemoveUserToSessionIsOkAndCallService() throws Exception {
+        //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
         when(userService.findById(999L)).thenReturn(mockUser);
 
+        //When
         this.mockMvc.perform(delete("/api/session/42/participate/999"))
+
+        //Then
                 .andExpect(status().isOk());
         verify(sessionService,times(1)).noLongerParticipate(42L,999L);
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testDeleteSessionAsNull() throws Exception {
+    public void testDeleteSessionAsNullIsNotFoundAndDontCallService() throws Exception {
+        //Given
         when(sessionService.getById(682L)).thenReturn(null);
 
+        //When
         this.mockMvc.perform(delete("/api/session/682"))
+
+        //Then
                 .andExpect(status().isNotFound());
+        verify(sessionService,times(0)).delete(682L);
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testDeleteParticipationAsNaN() throws Exception {
+    public void testDeleteParticipationAsNaNIsBadRequestAndDontCallService() throws Exception {
+        //Given
+
+        //When
         this.mockMvc.perform(delete("/api/session/8/participate/*68847--"))
+
+        //Then
                 .andExpect(status().isBadRequest());
+        verify(sessionService,times(0)).delete(any());
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testPostParticipationAsNaN() throws Exception {
+    public void testPostParticipationAsNaNIsBadRequestAndDontCallService() throws Exception {
+        //Given
+
+        //When
+
         this.mockMvc.perform(post("/api/session/*68847--/participate/5"))
+
+        //Then
                 .andExpect(status().isBadRequest());
+        verify(sessionService,times(0)).participate(any(),any());
     }
 
 
