@@ -35,19 +35,27 @@ public class TeacherServiceTest {
 
     @Test
     public void testFindAllTeachers() {
+        //Given
         when(teacherRepository.findAll()).thenReturn(teachers);
 
+        //When
         List<Teacher> teachersList=teacherService.findAll();
+
+        //Then
         assertThat(teachersList.size()).isEqualTo(2);
         verify(teacherRepository,times(1)).findAll();
     }
 
     @Test
-    public void testFindTeacher() {
+    public void testFindValidTeacherById() {
+        //Given
         Teacher mockTeacher=Teacher.builder().firstName("Prenom").lastName("Nom").build();
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teachers.get(1)));
 
+        //When
         Teacher teacher=teacherService.findById(1L);
+
+        //Then
         assertThat(teacher).isEqualTo(mockTeacher);
         verify(teacherRepository,times(1)).findById(1L);
     }

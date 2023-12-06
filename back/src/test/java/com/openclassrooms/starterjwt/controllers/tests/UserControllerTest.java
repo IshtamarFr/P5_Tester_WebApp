@@ -1,4 +1,4 @@
-package com.openclassrooms.starterjwt.controllers;
+package com.openclassrooms.starterjwt.controllers.tests;
 
 import com.openclassrooms.starterjwt.services.UserService;
 import org.junit.jupiter.api.Test;
@@ -45,6 +45,7 @@ public class UserControllerTest {
     @Test
     @WithUserDetails("yoga@studio.com")
     public void testDeleteUserByIdNullUser() throws Exception {
+        
         when(userService.findById(42L)).thenReturn(null);
 
         this.mockMvc.perform(delete("/api/user/1"))

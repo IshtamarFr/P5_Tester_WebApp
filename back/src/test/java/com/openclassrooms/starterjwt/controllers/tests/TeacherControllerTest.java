@@ -1,4 +1,4 @@
-package com.openclassrooms.starterjwt.controllers;
+package com.openclassrooms.starterjwt.controllers.tests;
 
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.services.TeacherService;
@@ -39,6 +39,7 @@ public class TeacherControllerTest {
 
     @BeforeEach
     public void init() {
+        //given
         mockTeacher1=Teacher.builder()
                 .id(106L)
                 .firstName("TheOld")
@@ -59,8 +60,10 @@ public class TeacherControllerTest {
     @Test
     @WithUserDetails("yoga@studio.com")
     public void testGetAllTeachers() throws Exception {
+        //when
         when(teacherService.findAll()).thenReturn(teachers);
 
+        //then
         this.mockMvc.perform(get("/api/teacher"))
                 .andDo(print())
                 .andExpect(status().isOk())

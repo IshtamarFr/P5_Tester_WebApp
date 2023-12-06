@@ -20,19 +20,28 @@ public class UserServiceTest {
     @InjectMocks UserService userService;
 
     @Test
-    public void testFindUser() {
+    public void testFindValidUserById() {
+        //Given
         User mockUser=new User("test@test.com","Nom","Prenom","123456",true);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
 
+        //When
         User user=userService.findById(1L);
+
+        //Then
         assertThat(user).isEqualTo(mockUser);
         verify(userRepository,times(1)).findById(1L);
     }
 
     @Test
-    public void testDeleteUser() {
+    public void testDeleteExistingUserById() {
+        //Given
+
+        //When
         userService.delete(3L);
+
+        //Then
         verify(userRepository,times(1)).deleteById(3L);
     }
 }
