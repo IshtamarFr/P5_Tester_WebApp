@@ -86,4 +86,30 @@ public class AuthControllerIT {
         //Then
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void testRegisterUserDontWorkIfEmailIsAlreadyTaken() throws Exception {
+        //Given
+        try {
+            userRepository.save(testUser);
+        } catch (Exception e) {
+            //ignore
+        }
+
+        SignupRequest signupRequest= SignupRequest.builder()
+                .email("987654321@test.com")
+                .password("Aa123456!")
+                .lastName("MockLN")
+                .firstName("MockFN")
+                .build();
+
+        //When
+        this.mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(signupRequest)))
+
+        //Then
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Email is already taken")));
+    }
 }
