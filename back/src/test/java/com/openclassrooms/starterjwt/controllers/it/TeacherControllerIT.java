@@ -2,7 +2,6 @@ package com.openclassrooms.starterjwt.controllers.it;
 
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.repository.TeacherRepository;
-import com.openclassrooms.starterjwt.services.TeacherService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TeacherControllerIT {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private TeacherService teacherService;
     @Autowired
     private TeacherRepository teacherRepository;
 
@@ -68,5 +65,26 @@ public class TeacherControllerIT {
 
         //Then
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetTeacherByIdIsUnauthorized() throws Exception {
+        //Given
+
+        //When
+        this.mockMvc.perform(get("/api/teacher/682"))
+
+        //Then
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles="USER")
+    public void testGetTeacherIsNotFound() throws Exception {
+        //When
+        this.mockMvc.perform(get("/api/teacher/999999999"))
+
+        //Then
+                .andExpect(status().isNotFound());
     }
 }

@@ -228,6 +228,4 @@ public class SessionControllerTest {
                 .andExpect(status().isBadRequest());
         verify(sessionService,times(0)).participate(any(),any());
     }
-
-
 }
