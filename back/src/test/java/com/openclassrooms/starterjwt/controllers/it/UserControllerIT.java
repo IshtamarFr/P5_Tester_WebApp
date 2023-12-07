@@ -31,7 +31,7 @@ public class UserControllerIT {
     private final BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
 
     final ObjectMapper mapper=new ObjectMapper();
-    private Long testUserId;
+    Long testUserId;
 
     final private User testUser=User.builder()
             .email("987654321@test.com")
@@ -43,8 +43,7 @@ public class UserControllerIT {
     @BeforeEach
     void init() {
         try {
-            userRepository.save(testUser);
-            userRepository.findByEmail("987654321@test.com").ifPresent(user->testUserId=user.getId());
+            testUserId = userRepository.save(testUser).getId();
         } catch (Exception e) {
             //ignore
         }
@@ -52,12 +51,19 @@ public class UserControllerIT {
 
     @AfterEach
     void clean(){
-        userRepository.findByEmail("987654321@test.com").ifPresent(user -> userRepository.deleteById(user.getId()));
+        try {
+            userRepository.deleteById(testUserId);
+        } catch (Exception e) {
+            //ignore
+        }
     }
 
     @Test
     @WithMockUser(roles="USER")
     public void testGetUserByIdFindsValidUser() throws Exception {
+        //Given
+        Long testUserId=userRepository.save(testUser).getId();
+
         //When
         this.mockMvc.perform(get("/api/user/"+testUserId))
 

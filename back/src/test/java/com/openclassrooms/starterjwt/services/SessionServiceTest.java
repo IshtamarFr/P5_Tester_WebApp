@@ -6,7 +6,6 @@ import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.SessionRepository;
 import com.openclassrooms.starterjwt.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,26 +26,21 @@ public class SessionServiceTest {
     @Mock UserRepository userRepository;
     @InjectMocks SessionService sessionService;
 
-    Session mockSession;
-    User mockUser;
-
-    @BeforeEach
-    public void init() {
-        mockUser=new User();
-        mockUser.setId(999L);
-        mockUser.setFirstName("Tickle");
-        mockUser.setLastName("Monster");
-        mockUser.setEmail("scp999@scpfundation.com");
-        mockUser.setAdmin(false);
-        mockUser.setPassword("999999");
-
-        mockSession = new Session();
-        mockSession.setId(42L);
-        mockSession.setName("mock Session");
-        mockSession.setDate(new Date());
-        mockSession.setDescription("The mockest session");
-        mockSession.setUsers(new ArrayList<>());
-    }
+    Session mockSession=Session.builder()
+            .id(42L)
+            .name("mock Session")
+            .date(new Date())
+            .description("The mockest session")
+            .users(new ArrayList<>())
+            .build();
+    User mockUser=User.builder()
+            .id(999L)
+            .firstName("Tickle")
+            .lastName("Monster")
+            .email("scp999@scpfundation.com")
+            .admin(false)
+            .password("999999")
+            .build();
 
     @Test
     public void testCreateNewSessionIsSaved() {

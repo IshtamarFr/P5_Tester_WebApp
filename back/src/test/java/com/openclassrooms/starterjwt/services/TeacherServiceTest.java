@@ -2,14 +2,13 @@ package com.openclassrooms.starterjwt.services;
 
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.repository.TeacherRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,15 +22,15 @@ public class TeacherServiceTest {
 
     @InjectMocks TeacherService teacherService;
 
-    List<Teacher> teachers;
-    @BeforeEach
-    public void init() {
-        teachers= new ArrayList<>();
-        Teacher teacherOne=Teacher.builder().firstName("Prenom").lastName("Nom").build();
-        Teacher teacherTwo=Teacher.builder().firstName("Prenom2").lastName("Nom2").build();
-        teachers.add(teacherOne);
-        teachers.add(teacherTwo);
-    }
+    final Teacher teacherOne=Teacher.builder()
+            .firstName("Prenom")
+            .lastName("Nom")
+            .build();
+    final Teacher teacherTwo=Teacher.builder()
+            .firstName("Prenom2")
+            .lastName("Nom2")
+            .build();
+    final List<Teacher> teachers= Arrays.asList(teacherOne,teacherTwo);
 
     @Test
     public void testFindAllTeachers() {
@@ -49,14 +48,13 @@ public class TeacherServiceTest {
     @Test
     public void testFindValidTeacherById() {
         //Given
-        Teacher mockTeacher=Teacher.builder().firstName("Prenom").lastName("Nom").build();
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teachers.get(1)));
 
         //When
         Teacher teacher=teacherService.findById(1L);
 
         //Then
-        assertThat(teacher).isEqualTo(mockTeacher);
+        assertThat(teacher).isEqualTo(teacherOne);
         verify(teacherRepository,times(1)).findById(1L);
     }
 }
