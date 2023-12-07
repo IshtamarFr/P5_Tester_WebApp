@@ -44,12 +44,11 @@ public class AuthControllerIT {
     @AfterEach
     void clean(){
         try {
-            userRepository.deleteById(userRepository.findByEmail("987654321@test.com").get().getId());
+            userRepository.findByEmail("987654321@test.com").ifPresent(user -> userRepository.deleteById(user.getId()));
         } catch (Exception e) {
             //ignore
         }
     }
-
 
     @Test
     public void testLoginUserWorksWithCorrectCredential() throws Exception {

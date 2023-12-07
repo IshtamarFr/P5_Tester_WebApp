@@ -33,7 +33,7 @@ public class UserControllerTest {
         when(userService.findById(42L)).thenReturn(null);
 
         //When
-        this.mockMvc.perform(get("/api/user/1"))
+        this.mockMvc.perform(get("/api/user/42"))
 
         //Then
                 .andExpect(status().isNotFound());
@@ -60,7 +60,7 @@ public class UserControllerTest {
         when(userService.findById(42L)).thenReturn(null);
 
         //When
-        this.mockMvc.perform(delete("/api/user/1"))
+        this.mockMvc.perform(delete("/api/user/42"))
 
         //Then
                 .andExpect(status().isNotFound());
