@@ -7,7 +7,6 @@ import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.services.SessionService;
 import com.openclassrooms.starterjwt.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -41,24 +40,19 @@ public class SessionControllerTest {
     @MockBean
     UserService userService;
 
-    Session mockSession;
-    User mockUser;
-
     final ObjectMapper mapper=new ObjectMapper();
 
     @Autowired
     SessionMapper sessionMapper;
 
-    @BeforeEach
-    public void init() {
-        Teacher mockTeacher=Teacher.builder()
-                .id(1L)
-                .firstName("mockFN")
-                .lastName("mockLN")
-                .build();
+    final Teacher mockTeacher=Teacher.builder()
+            .id(1L)
+            .firstName("mockFN")
+            .lastName("mockLN")
+            .build();
 
-        mockUser=User.builder()
-                .id(999L)
+    final User mockUser=User.builder()
+            .id(999L)
                 .firstName("Tickle")
                 .lastName("Monster")
                 .email("scp999@scpfundation.com")
@@ -66,17 +60,16 @@ public class SessionControllerTest {
                 .password("999999")
                 .build();
 
-        mockSession = Session.builder()
-                .id(42L)
-                .name("mock Session")
-                .date(new Date())
-                .teacher(mockTeacher)
-                .description("The mockest session")
-                .build();
-    }
+    final Session mockSession = Session.builder()
+            .id(42L)
+            .name("mock Session")
+            .date(new Date())
+            .teacher(mockTeacher)
+            .description("The mockest session")
+            .build();
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testGetAllSessionsWorksAndCallService() throws Exception {
         //Given
         List<Session>sessions=new ArrayList<>();
@@ -92,7 +85,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testGetSessionByIdIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
@@ -107,7 +100,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testCreateSessionIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.create(mockSession)).thenReturn(mockSession);
@@ -122,7 +115,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testModifySessionIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.update(42L, mockSession)).thenReturn(mockSession);
@@ -139,7 +132,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testModifySessionWithNaNIsBadRequestDontCallService() throws Exception {
         //Given
 
@@ -155,7 +148,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testDeleteSessionIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
@@ -169,7 +162,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testAddUserToSessionIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
@@ -184,7 +177,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testRemoveUserToSessionIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
@@ -199,7 +192,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testDeleteSessionAsNullIsNotFoundAndDontCallService() throws Exception {
         //Given
         when(sessionService.getById(682L)).thenReturn(null);
@@ -213,7 +206,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testDeleteParticipationAsNaNIsBadRequestAndDontCallService() throws Exception {
         //Given
 
@@ -226,7 +219,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testPostParticipationAsNaNIsBadRequestAndDontCallService() throws Exception {
         //Given
 

@@ -2,7 +2,6 @@ package com.openclassrooms.starterjwt.controllers.tests;
 
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.services.TeacherService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -10,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -32,31 +31,20 @@ public class TeacherControllerTest {
     @MockBean
     TeacherService teacherService;
 
-    Teacher mockTeacher1;
-    Teacher mockTeacher2;
-    List<Teacher> teachers;
-
-    @BeforeEach
-    public void init() {
-        mockTeacher1=Teacher.builder()
-                .id(106L)
-                .firstName("TheOld")
-                .lastName("Man")
-                .build();
-
-        mockTeacher2=Teacher.builder()
-                .id(682L)
-                .firstName("HardToDestroy")
-                .lastName("Reptile")
-                .build();
-
-        teachers=new ArrayList<>();
-        teachers.add(mockTeacher1);
-        teachers.add(mockTeacher2);
-    }
+    final Teacher mockTeacher1=Teacher.builder()
+            .id(106L)
+            .firstName("TheOld")
+            .lastName("Man")
+            .build();
+    final Teacher mockTeacher2=Teacher.builder()
+            .id(682L)
+            .firstName("HardToDestroy")
+            .lastName("Reptile")
+            .build();
+    final List<Teacher> teachers=Arrays.asList(mockTeacher1, mockTeacher2);
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testGetAllTeachersIsOkAndCallService() throws Exception {
         //Given
         when(teacherService.findAll()).thenReturn(teachers);
@@ -72,7 +60,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testGetTeacherByIdIsOkAndCallService() throws Exception {
         //Given
         when(teacherService.findById(682L)).thenReturn(mockTeacher2);
@@ -98,7 +86,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testGetTeacherAsNullIsNotFoundAndDontCallService() throws Exception {
         //Given
         when(teacherService.findById(9999L)).thenReturn(null);
@@ -112,7 +100,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    @WithUserDetails("yoga@studio.com")
+    @WithMockUser(roles="USER")
     public void testGetTeacherAsNaNIsBadRequestAndDontCallService() throws Exception {
         //Given
 

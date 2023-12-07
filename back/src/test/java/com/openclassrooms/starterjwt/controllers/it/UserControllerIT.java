@@ -96,7 +96,7 @@ public class UserControllerIT {
         //When
         this.mockMvc.perform(delete("/api/user/"+testUserId).with(user("987654321@test.com")))
 
-                //Then
+        //Then
                 .andExpect(status().isOk());
     }
 }
