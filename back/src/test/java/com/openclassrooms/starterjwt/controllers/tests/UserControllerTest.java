@@ -11,7 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,34 +28,57 @@ public class UserControllerTest {
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testGetUserByIdNullUser() throws Exception {
+    public void testGetUserByIdNullUserIsNotFound() throws Exception {
+        //Given
         when(userService.findById(42L)).thenReturn(null);
 
+        //When
         this.mockMvc.perform(get("/api/user/1"))
+
+        //Then
                 .andExpect(status().isNotFound());
+        verify(userService,times(1)).findById(42L);
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testGetUserNaN() throws Exception {
+    public void testGetUserNaNIsBadRequestAndDontCallService() throws Exception {
+        //Given
+
+        //When
         this.mockMvc.perform(get("/api/user/AAA"))
+
+        //Then
                 .andExpect(status().isBadRequest());
+        verify(userService,times(0)).findById(any());
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testDeleteUserByIdNullUser() throws Exception {
-        
+    public void testDeleteUserByIdNullUserIsNotFoundAndDontCallDeleteService() throws Exception {
+        //Given
         when(userService.findById(42L)).thenReturn(null);
 
+        //When
         this.mockMvc.perform(delete("/api/user/1"))
+
+        //Then
                 .andExpect(status().isNotFound());
+        verify(userService,times(1)).findById(42L);
+        verify(userService,times(0)).delete(any());
     }
 
     @Test
     @WithUserDetails("yoga@studio.com")
-    public void testDeleteUserNaN() throws Exception {
+    public void testDeleteUserNaNIsBadRequestAndDontCallServices() throws Exception {
+        //Given
+
+        //When
         this.mockMvc.perform(delete("/api/user/AAA"))
+
+        //Then
                 .andExpect(status().isBadRequest());
+        verify(userService,times(0)).findById(any());
+        verify(userService,times(0)).delete(any());
     }
 }
