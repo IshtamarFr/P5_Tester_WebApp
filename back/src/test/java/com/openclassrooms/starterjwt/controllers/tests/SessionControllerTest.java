@@ -228,4 +228,43 @@ public class SessionControllerTest {
                 .andExpect(status().isBadRequest());
         verify(sessionService,times(0)).participate(any(),any());
     }
+
+    @Test
+    @WithMockUser(roles="USER")
+    public void testGetSessionAsNaNIsBadRequestAndDontCallService() throws Exception {
+        //Given
+
+        //When
+        this.mockMvc.perform(get("/api/session/*68847--"))
+
+        //Then
+                .andExpect(status().isBadRequest());
+        verify(sessionService,times(0)).getById(any());
+    }
+
+    @Test
+    @WithMockUser(roles="USER")
+    public void testDeleteSessionAsNaNIsBadRequestAndDontCallService() throws Exception {
+        //Given
+
+        //When
+        this.mockMvc.perform(delete("/api/session/*68847--"))
+
+        //Then
+                .andExpect(status().isBadRequest());
+        verify(sessionService,times(0)).delete(any());
+    }
+
+    @Test
+    @WithMockUser(roles="USER")
+    public void testGetSessionAsNotFundIsNotFound() throws Exception {
+        //Given
+
+        //When
+        this.mockMvc.perform(get("/api/session/9999999999"))
+
+        //Then
+                .andExpect(status().isNotFound());
+        verify(sessionService,times(1)).getById(9999999999L);
+    }
 }
