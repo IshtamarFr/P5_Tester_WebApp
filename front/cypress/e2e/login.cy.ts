@@ -28,7 +28,7 @@ describe('Login spec', () => {
 
     //Then
     cy.url().should('include', '/sessions');
-    cy.get('p').should('not.exist');
+    cy.get('.error').should('not.exist');
   });
 
   it('Login fails with incorrect credentials', () => {
@@ -46,6 +46,21 @@ describe('Login spec', () => {
 
     //Then
     cy.url().should('include', '/login');
-    cy.get('p').should('have.class', 'error');
+    cy.get('.error').should('exist');
+  });
+
+  it('button should be enabled/disabled according to what is typed', () => {
+    cy.visit('/login');
+    cy.get('[data-test-id="login-submit"]').should('be.disabled');
+
+    cy.get('input[formControlName=email]').type('yoga');
+    cy.get('input[formControlName=password]').type('test!1234');
+    cy.get('[data-test-id="login-submit"]').should('be.disabled');
+
+    cy.get('input[formControlName=email]').type('@studio.com');
+    cy.get('[data-test-id="login-submit"]').should('not.be.disabled');
+
+    cy.get('input[formControlName=password]').clear();
+    cy.get('[data-test-id="login-submit"]').should('be.disabled');
   });
 });

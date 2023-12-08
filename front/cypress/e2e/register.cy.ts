@@ -1,7 +1,6 @@
-describe('Login spec', () => {
-  it('Register successfully', () => {
-    cy.visit('/login');
-
+describe('Register spec', () => {
+  it('Register successfully with correct credentials should lead to sessions', () => {
+    //Given
     cy.intercept('POST', '/api/auth/register', {
       body: {
         id: 1,
@@ -12,19 +11,16 @@ describe('Login spec', () => {
       },
     });
 
-    cy.intercept(
-      {
-        method: 'GET',
-        url: '/api/session',
-      },
-      []
-    ).as('session');
+    //When
+    cy.visit('/register');
 
+    cy.get('input[formControlName=firstName]').type('admin');
+    cy.get('input[formControlName=lastName]').type('admin');
     cy.get('input[formControlName=email]').type('yoga@studio.com');
-    cy.get('input[formControlName=password]').type(
-      `${'test!1234'}{enter}{enter}`
-    );
+    cy.get('input[formControlName=password]').type('test!1234');
+    cy.get('[data-test-id="register-submit"]').click();
 
-    cy.url().should('include', '/sessions');
+    //Then
+    cy.url().should('include', '/login');
   });
 });
