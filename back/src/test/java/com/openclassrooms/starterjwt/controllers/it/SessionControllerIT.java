@@ -72,8 +72,16 @@ public class SessionControllerIT {
     void init() {
         try {
            mockUserId= userRepository.save(mockUser).getId();
-           mockTeacherId=teacherRepository.save(mockTeacher).getId();
-           mockSessionId=sessionRepository.save(mockSession).getId();
+        } catch (Exception e) {
+            //ignore
+        }
+        try {
+            mockTeacherId=teacherRepository.save(mockTeacher).getId();
+        } catch (Exception e) {
+            //ignore
+        }
+        try {
+            mockSessionId=sessionRepository.save(mockSession).getId();
         } catch (Exception e) {
             //ignore
         }
@@ -83,7 +91,15 @@ public class SessionControllerIT {
     void clean() {
         try {
             sessionRepository.deleteById(mockSessionId);
+        } catch (Exception e) {
+            //ignore
+        }
+        try {
             userRepository.deleteById(mockUserId);
+        } catch (Exception e) {
+            //ignore
+        }
+        try {
             teacherRepository.deleteById(mockTeacherId);
         } catch (Exception e) {
             //ignore
