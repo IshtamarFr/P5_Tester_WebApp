@@ -1,11 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
-import { NgControl, ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
@@ -66,52 +61,77 @@ describe('DetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get back', () => {
+  it('get back should call component method', () => {
+    //Given
     let componentBack = jest.spyOn(component, 'back');
+
+    //When
     component.back();
+
+    //Then
     expect(componentBack).toBeDefined();
     expect(componentBack).toHaveBeenCalled();
   });
 
-  it('should init', () => {
+  it('init should launch correct session and call service', () => {
+    //Given
     let sessionApiServiceSpy = jest
       .spyOn(sessionApiService, 'detail')
       .mockReturnValue(of(mockSession));
     component['sessionId'] = '42';
+
+    //When
     component.ngOnInit();
+
+    //Then
     expect(sessionApiServiceSpy).toHaveBeenCalledWith('42');
   });
 
-  it('should delete session', () => {
+  it('delete session should get back to sessions and call service', () => {
+    //Given
     component['sessionId'] = '42';
     let sessionApiServiceSpy = jest
       .spyOn(sessionApiService, 'delete')
       .mockReturnValue(of('test'));
     let navigateSpy = jest.spyOn(router, 'navigate');
+
+    //When
     component.delete();
+
+    //Then
     expect(sessionApiServiceSpy).toHaveBeenCalledWith('42');
     expect(navigateSpy).toHaveBeenCalledWith(['sessions']);
   });
 
-  it('should participate', () => {
+  it('should participate should call service with credentials', () => {
+    //Given
     component['sessionId'] = '1';
     component['userId'] = '2';
 
     let sessionApiServiceSpy = jest
       .spyOn(sessionApiService, 'participate')
       .mockReturnValue(of(void 0));
+
+    //When
     component.participate();
+
+    //Then
     expect(sessionApiServiceSpy).toHaveBeenCalledWith('1', '2');
   });
 
-  it('should unParticipate', () => {
+  it('should unParticipate should call service with credentials', () => {
+    //Given
     component['sessionId'] = '3';
     component['userId'] = '4';
 
     let sessionApiServiceSpy = jest
       .spyOn(sessionApiService, 'unParticipate')
       .mockReturnValue(of(void 0));
+
+    //When
     component.unParticipate();
+
+    //Then
     expect(sessionApiServiceSpy).toHaveBeenCalledWith('3', '4');
   });
 });

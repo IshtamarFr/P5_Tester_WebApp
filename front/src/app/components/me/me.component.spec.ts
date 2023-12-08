@@ -72,28 +72,42 @@ describe('MeComponent', () => {
   });
 
   it('should init with user id', () => {
+    //Given
     let userServiceSpy = jest
       .spyOn(userService, 'getById')
       .mockReturnValue(of(mockUser));
 
+    //When
     component.ngOnInit();
+
+    //Then
     expect(component['user']?.firstName).toBe('mockFN');
     expect(userServiceSpy).toHaveBeenCalledWith('1');
   });
 
-  it('should get back', () => {
+  it('get back should call component method', () => {
+    //Given
     let componentBack = jest.spyOn(component, 'back');
+
+    //When
     component.back();
+
+    //Then
     expect(componentBack).toBeDefined();
     expect(componentBack).toHaveBeenCalled();
   });
 
-  it('should delete user', () => {
+  it('delete user should call service and navigate back', () => {
+    //Given
     let userServiceSpy = jest
       .spyOn(userService, 'delete')
       .mockReturnValue(of(void 0));
     let navigateSpy = jest.spyOn(router, 'navigate');
+
+    //When
     component.delete();
+
+    //Then
     expect(userServiceSpy).toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith(['/']);
   });

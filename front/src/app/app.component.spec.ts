@@ -40,15 +40,25 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should check login state', () => {
+  it('should check login state at beginning', () => {
+    //Given
     let state!: boolean;
+
+    //When
     app.$isLogged().subscribe((x) => (state = x));
+
+    //Then
     expect(state).toBe(true);
   });
 
-  it('should logOut', () => {
+  it('should navigate to root when logOut', () => {
+    //Given
     let navigateSpy = jest.spyOn(router, 'navigate');
+
+    //When
     app.logout();
+
+    //Then
     expect(navigateSpy).toHaveBeenCalledWith(['']);
   });
 });

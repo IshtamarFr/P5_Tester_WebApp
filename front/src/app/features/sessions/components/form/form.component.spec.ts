@@ -68,22 +68,33 @@ describe('FormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should redirect non admin', () => {
+  it('non admin should be redirected to sessions at start', () => {
+    //Given
     let navigateSpy = jest.spyOn(router, 'navigate');
     mockSessionService.sessionInformation.admin = false;
+
+    //When
     component.ngOnInit();
+
+    //Then
     expect(navigateSpy).toHaveBeenCalledWith(['/sessions']);
   });
 
-  it('should not redirect admin on update', () => {
+  it('admin should not be redirected at start', () => {
+    //Given
     let navigateSpy = jest.spyOn(router, 'navigate');
     mockSessionService.sessionInformation.admin = true;
     jest.spyOn(router, 'url', 'get').mockReturnValue('/sessions/update/42');
+
+    //When
     component.ngOnInit();
+
+    //Then
     expect(navigateSpy).not.toHaveBeenCalledWith(['/sessions']);
   });
 
-  it('should redirect non admin on update', () => {
+  it('non admin should be redirected on update', () => {
+    //Given
     let navigateSpy = jest.spyOn(router, 'navigate');
     mockSessionService.sessionInformation.admin = false;
     let sessionApiServiceSpy = jest
@@ -91,32 +102,51 @@ describe('FormComponent', () => {
       .mockReturnValue(of(mockSession));
 
     jest.spyOn(router, 'url', 'get').mockReturnValue('/sessions/update/42');
+
+    //When
     component.ngOnInit();
+
+    //Then
     expect(navigateSpy).toHaveBeenCalledWith(['/sessions']);
     expect(component['onUpdate']).toBe(true);
     expect(sessionApiServiceSpy).toHaveBeenCalled();
   });
 
-  it('should leave page', () => {
+  it('leave page should navigate to sessions', () => {
+    //Given
     let navigateSpy = jest.spyOn(router, 'navigate');
+
+    //When
     component['exitPage']('test');
+
+    //Then
     expect(navigateSpy).toHaveBeenCalledWith(['sessions']);
   });
 
-  it('should submit form on create', () => {
+  it('create should submit form and call service', () => {
+    //Given
     let sessionApiServiceSpy = jest
       .spyOn(sessionApiService, 'create')
       .mockReturnValue(of(mockSession));
+
+    //When
     component.submit();
+
+    //Then
     expect(sessionApiServiceSpy).toHaveBeenCalled();
   });
 
-  it('should submit form on update', () => {
+  it('update should submit form and call service', () => {
+    //Given
     let sessionApiServiceSpy = jest
       .spyOn(sessionApiService, 'update')
       .mockReturnValue(of(mockSession));
     component['onUpdate'] = true;
+
+    //When
     component.submit();
+
+    //Then
     expect(sessionApiServiceSpy).toHaveBeenCalled();
   });
 });

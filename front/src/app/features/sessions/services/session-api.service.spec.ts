@@ -30,48 +30,83 @@ describe('SessionsService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should delete session by id', () => {
+  it('delete session by id should call http method', () => {
+    //Given
+
+    //When
     service.delete('1').subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(service['pathService'] + '/1');
     expect(req.request.method).toEqual('DELETE');
   });
 
-  it('get session details', () => {
+  it('get session details should call http method', () => {
+    //Given
+
+    //When
     service.detail('1').subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(service['pathService'] + '/1');
     expect(req.request.method).toEqual('GET');
   });
 
-  it('get all sessions', () => {
+  it('get all sessions should call http method', () => {
+    //Given
+
+    //When
     service.all().subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(service['pathService']);
     expect(req.request.method).toEqual('GET');
   });
 
-  it('creates a new session', () => {
+  it('create a new session should call http method', () => {
+    //Given
+
+    //When
     service.create(mockSession).subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(service['pathService']);
     expect(req.request.method).toEqual('POST');
   });
 
-  it('update a session', () => {
+  it('update a session should call http method', () => {
+    //Given
+
+    //When
     service.update('999', mockSession).subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(
       service['pathService'] + '/999'
     );
     expect(req.request.method).toEqual('PUT');
   });
 
-  it('participates works', () => {
+  it('participates should work and call http method', () => {
+    //Given
+
+    //When
     service.participate('1', '999').subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(
       service['pathService'] + '/1/participate/999'
     );
     expect(req.request.method).toEqual('POST');
   });
 
-  it('unParticipates works', () => {
+  it('unParticipates should work and call http method', () => {
+    //Given
+
+    //When
     service.unParticipate('1', '999').subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(
       service['pathService'] + '/1/participate/999'
     );

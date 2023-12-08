@@ -29,14 +29,19 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should register', () => {
+  it('register should call http method', () => {
+    //Given
     let registerRequest: RegisterRequest = {
       email: 'test@test.com',
       firstName: 'mockFN',
       lastName: 'mockLN',
       password: '123456',
     };
+
+    //When
     service.register(registerRequest).subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(
       service['pathService'] + '/register'
     );
@@ -44,11 +49,16 @@ describe('AuthService', () => {
   });
 
   it('should login', () => {
+    //Given
     let loginRequest: LoginRequest = {
       email: 'test@test.com',
       password: '123456',
     };
+
+    //When
     service.login(loginRequest).subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(
       service['pathService'] + '/login'
     );

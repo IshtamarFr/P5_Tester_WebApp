@@ -22,7 +22,7 @@ describe('SessionService', () => {
     service = TestBed.inject(SessionService);
   });
 
-  it('shouldnt be logged', () => {
+  it('service islogged should be falsy at start', () => {
     expect(service.$isLogged()).not.toBeTruthy;
   });
 
@@ -30,13 +30,23 @@ describe('SessionService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should be logged in', () => {
+  it('logIn should make service islogged to be truthy', () => {
+    //Given
+
+    //When
     service.logIn(mockUser);
+
+    //Then
     expect(service.isLogged).toBeTruthy;
   });
 
-  it('should be logged out', () => {
+  it('logOut should make service islogged to be falsy', () => {
+    //Given
+
+    //When
     service.logOut();
+
+    //Then
     expect(service.isLogged).not.toBeTruthy;
   });
 });

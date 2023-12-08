@@ -63,11 +63,16 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should submit', () => {
+  it('submit should call service', () => {
+    //Given
     let authServiceSpy = jest
       .spyOn(authService, 'login')
       .mockReturnValue(of(mockSessionInformation));
+
+    //When
     component.submit();
+
+    //Then
     expect(authServiceSpy).toHaveBeenCalled();
   });
 });

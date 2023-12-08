@@ -28,8 +28,13 @@ describe('UserService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should delete user by id', () => {
+  it('delete user by id should call http method', () => {
+    //Given
+
+    //When
     service.delete('42').subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(service['pathService'] + '/42');
     expect(req.request.method).toEqual('DELETE');
   });

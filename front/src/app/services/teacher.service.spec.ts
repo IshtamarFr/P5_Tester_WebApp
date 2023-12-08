@@ -28,14 +28,24 @@ describe('TeacherService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get all teachers', () => {
+  it('get all teachers should call http method', () => {
+    //Given
+
+    //When
     service.all().subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(service['pathService']);
     expect(req.request.method).toEqual('GET');
   });
 
-  it('should get teacher by id', () => {
+  it('get teacher by id should call http method', () => {
+    //Given
+
+    //When
     service.detail('42').subscribe();
+
+    //Then
     const req = httpTestingController.expectOne(service['pathService'] + '/42');
     expect(req.request.method).toEqual('GET');
   });
