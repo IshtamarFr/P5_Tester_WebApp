@@ -8,7 +8,9 @@
     <div *ngIf="$isLogged() | async; else notLogged">
       <span routerLink="sessions" class="link">Sessions</span>
       <span routerLink="me" class="link">Account</span>
-      <span (click)="logout()" class="link">Logout</span>
+      <span (click)="logout()" class="link" data-test-id="navbar-me"
+        >Logout</span
+      >
     </div>
     <ng-template #notLogged>
       <div>

@@ -63,4 +63,19 @@ describe('Login spec', () => {
     cy.get('input[formControlName=password]').clear();
     cy.get('[data-test-id="login-submit"]').should('be.disabled');
   });
+
+  it('Logout successfully lead back to login page', () => {
+    //Given
+    cy.visit('/login');
+    cy.get('input[formControlName=email]').type('yoga@studio.com');
+    cy.get('input[formControlName=password]').type(
+      `${'test!1234'}{enter}{enter}`
+    );
+
+    //When
+    cy.get('[data-test-id="navbar-me"]').click();
+
+    //Then
+    cy.url().should('not.include', '/sessions');
+  });
 });

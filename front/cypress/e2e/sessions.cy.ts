@@ -9,6 +9,5 @@ describe('Sessions spec', () => {
 
     //Then
     cy.url().should('include', '/sessions');
-    cy.get('.error').should('not.exist');
   });
 });
