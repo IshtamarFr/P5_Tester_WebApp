@@ -66,6 +66,24 @@ describe('Login spec', () => {
 
   it('Logout successfully lead back to login page', () => {
     //Given
+    cy.intercept('POST', '/api/auth/login', {
+      body: {
+        id: 1,
+        username: 'userName',
+        firstName: 'firstName',
+        lastName: 'lastName',
+        admin: true,
+      },
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/session',
+      },
+      []
+    ).as('session');
+
     cy.visit('/login');
     cy.get('input[formControlName=email]').type('yoga@studio.com');
     cy.get('input[formControlName=password]').type(
@@ -76,6 +94,6 @@ describe('Login spec', () => {
     cy.get('[data-test-id="navbar-me"]').click();
 
     //Then
-    cy.url().should('not.include', '/sessions');
+    cy.url().should('not.contain', '/sessions');
   });
 });
