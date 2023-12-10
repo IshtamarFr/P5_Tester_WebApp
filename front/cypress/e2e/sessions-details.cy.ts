@@ -1,4 +1,4 @@
-describe('Routing spec', () => {
+describe('Session details', () => {
   it('should show correct session data after it is clicked on as well as delete button if logged as admin', () => {
     //Given
     cy.intercept('POST', '/api/auth/login', {

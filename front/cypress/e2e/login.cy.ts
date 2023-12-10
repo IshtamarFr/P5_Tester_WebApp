@@ -91,7 +91,7 @@ describe('Login spec', () => {
     );
 
     //When
-    cy.get('[data-test-id="navbar-me"]').click();
+    cy.get('[data-test-id="navbar-logout"]').click();
 
     //Then
     cy.url().should('not.contain', '/sessions');

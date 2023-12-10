@@ -1,4 +1,4 @@
-describe('Routing spec', () => {
+describe('Session create', () => {
   it('should create a session if all fields are OK', () => {
     //Given
     cy.intercept('POST', '/api/auth/login', {
@@ -69,6 +69,7 @@ describe('Routing spec', () => {
 
     //When
     cy.get('.create-button').click();
+
     cy.get('[data-test-id="session-submit"]').should('be.disabled');
 
     cy.get('input[formControlName=name]').type('Super session de yoga');
