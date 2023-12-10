@@ -1,4 +1,4 @@
-package com.openclassrooms.starterjwt.controllers.tests;
+package com.openclassrooms.starterjwt.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.starterjwt.mapper.SessionMapper;

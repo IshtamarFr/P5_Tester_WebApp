@@ -1,4 +1,4 @@
-package com.openclassrooms.starterjwt.controllers.tests;
+package com.openclassrooms.starterjwt.controllers;
 
 import com.openclassrooms.starterjwt.services.UserService;
 import org.junit.jupiter.api.Test;
