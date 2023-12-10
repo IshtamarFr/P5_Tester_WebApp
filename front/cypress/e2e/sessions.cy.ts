@@ -1,4 +1,4 @@
-describe('Routing spec', () => {
+describe('Sessions spec', () => {
   it('should show sessions after logged in', () => {
     //Given
     cy.intercept('POST', '/api/auth/login', {
