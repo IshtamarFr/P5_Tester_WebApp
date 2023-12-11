@@ -6,6 +6,7 @@ import com.openclassrooms.starterjwt.payload.request.LoginRequest;
 import com.openclassrooms.starterjwt.payload.request.SignupRequest;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -44,6 +45,7 @@ public class AuthControllerIT {
     }
 
     @Test
+    @DisplayName("When I request login with correct credentials, response is OK and returns correct data")
     public void testLoginUserWorksWithCorrectCredential() throws Exception {
         //Given
         try {
@@ -69,6 +71,7 @@ public class AuthControllerIT {
     }
 
     @Test
+    @DisplayName("When I request register with correct data, response is OK")
     public void testRegisterUserWorks() throws Exception {
         //Given
         SignupRequest signupRequest= SignupRequest.builder()
@@ -88,6 +91,7 @@ public class AuthControllerIT {
     }
 
     @Test
+    @DisplayName("When I request register but email is already taken, response is BadRequest and returns message")
     public void testRegisterUserDontWorkIfEmailIsAlreadyTaken() throws Exception {
         //Given
         try {

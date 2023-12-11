@@ -5,6 +5,7 @@ import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -60,6 +61,7 @@ public class UserControllerIT {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get one user, response is OK and returns data")
     public void testGetUserByIdFindsValidUser() throws Exception {
         //Given
         Long testUserId=userRepository.save(testUser).getId();
@@ -73,6 +75,7 @@ public class UserControllerIT {
     }
 
     @Test
+    @DisplayName("When unAuthorized user requests get one user, response is unAuthorized")
     public void testDeleteUserByIdIsRejected() throws Exception {
         //When
         this.mockMvc.perform(delete("/api/user/"+testUserId))
@@ -82,6 +85,7 @@ public class UserControllerIT {
     }
 
     @Test
+    @DisplayName("When unAuthorized user requests delete one user, response is unAuthorized")
     public void testDeleteUserByIdIsRejectedWhenUserIsNotValid() throws Exception {
         //When
         this.mockMvc.perform(delete("/api/user/"+testUserId).with(user("yoga@studio.com")))
@@ -91,6 +95,7 @@ public class UserControllerIT {
     }
 
     @Test
+    @DisplayName("When auth user requests delete one user, response is OK")
     public void testDeleteUserByIdWorksWhenUserIsValid() throws Exception {
         //When
         this.mockMvc.perform(delete("/api/user/"+testUserId).with(user("987654321@test.com")))

@@ -10,6 +10,7 @@ import com.openclassrooms.starterjwt.repository.TeacherRepository;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -108,6 +109,7 @@ public class SessionControllerIT {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get all sessions, response is OK")
     public void testGetAllSessionsWorks() throws Exception {
         //When
         this.mockMvc.perform(get("/api/session/"))
@@ -118,6 +120,7 @@ public class SessionControllerIT {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get one session, response is OK and return data")
     public void testGetSessionByIdIsOk() throws Exception {
         //When
         this.mockMvc.perform(get("/api/session/"+mockSessionId))
@@ -129,6 +132,7 @@ public class SessionControllerIT {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests delete one session, response is OK")
     public void testDeleteSessionIsOk() throws Exception {
         //When
         this.mockMvc.perform(delete("/api/session/"+mockSessionId))
@@ -139,6 +143,7 @@ public class SessionControllerIT {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests participate for session, response is OK")
     public void testAddUserToSessionIsOk() throws Exception {
         //When
         this.mockMvc.perform(post("/api/session/"+mockSessionId+"/participate/"+mockUserId))

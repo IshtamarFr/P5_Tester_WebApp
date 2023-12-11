@@ -4,6 +4,7 @@ import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.repository.TeacherRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -49,6 +50,7 @@ public class TeacherControllerIT {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get all teachers, response is OK")
     public void testGetAllTeachersIsOkAndCallService() throws Exception {
         //When
         this.mockMvc.perform(get("/api/teacher"))
@@ -59,6 +61,7 @@ public class TeacherControllerIT {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get one teacher, response is OK")
     public void testGetTeacherByIdIsOkAndCallService() throws Exception {
         //When
         this.mockMvc.perform(get("/api/teacher/"+testTeacherId))
@@ -68,6 +71,7 @@ public class TeacherControllerIT {
     }
 
     @Test
+    @DisplayName("When unAuthorized user requests get one teacher, response is unAuthorized")
     public void testGetTeacherByIdIsUnauthorized() throws Exception {
         //Given
 
@@ -80,6 +84,7 @@ public class TeacherControllerIT {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get inexistant teacher, response is NotFound")
     public void testGetTeacherIsNotFound() throws Exception {
         //When
         this.mockMvc.perform(get("/api/teacher/999999999"))
