@@ -7,6 +7,7 @@ import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.services.SessionService;
 import com.openclassrooms.starterjwt.services.UserService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -67,6 +68,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get all sessions, response is OK and sessionService is called")
     public void testGetAllSessionsWorksAndCallService() throws Exception {
         //Given
         List<Session>sessions=new ArrayList<>();
@@ -83,6 +85,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests one session, response is OK, serve mock and sessionService is called")
     public void testGetSessionByIdIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
@@ -98,6 +101,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests create new session, response is OK and sessionService is called")
     public void testCreateSessionIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.create(mockSession)).thenReturn(mockSession);
@@ -113,6 +117,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests modify session, response is OK and sessionService is called")
     public void testModifySessionIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.update(42L, mockSession)).thenReturn(mockSession);
@@ -130,6 +135,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests modify incorrect session, response is BadRequest and no service is called")
     public void testModifySessionWithNaNIsBadRequestDontCallService() throws Exception {
         //Given
 
@@ -146,6 +152,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests delete session, response is OK and sessionService is called")
     public void testDeleteSessionIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
@@ -160,6 +167,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests participate session, response is OK and sessionService is called")
     public void testAddUserToSessionIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
@@ -175,6 +183,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests unParticipate session, response is OK and sessionService is called")
     public void testRemoveUserToSessionIsOkAndCallService() throws Exception {
         //Given
         when(sessionService.getById(42L)).thenReturn(mockSession);
@@ -190,6 +199,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests delete inexistant session, response is NotFound and no service is called")
     public void testDeleteSessionAsNullIsNotFoundAndDontCallService() throws Exception {
         //Given
         when(sessionService.getById(682L)).thenReturn(null);
@@ -204,6 +214,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests unParticipate NaN session, response is BadRequest and no service is called")
     public void testDeleteParticipationAsNaNIsBadRequestAndDontCallService() throws Exception {
         //Given
 
@@ -217,6 +228,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests participate NaN session, response is BadRequest and no service is called")
     public void testPostParticipationAsNaNIsBadRequestAndDontCallService() throws Exception {
         //Given
 
@@ -231,6 +243,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get a NaN session, response is BadRequest and no service is called")
     public void testGetSessionAsNaNIsBadRequestAndDontCallService() throws Exception {
         //Given
 
@@ -244,6 +257,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests delete a NaN session, response is BadRequest and no service is called")
     public void testDeleteSessionAsNaNIsBadRequestAndDontCallService() throws Exception {
         //Given
 
@@ -257,6 +271,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get inexistant session, response is NotFound and sessionService is called")
     public void testGetSessionAsNotFundIsNotFound() throws Exception {
         //Given
 
