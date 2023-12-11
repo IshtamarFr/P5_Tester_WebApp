@@ -6,6 +6,7 @@ import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.SessionRepository;
 import com.openclassrooms.starterjwt.repository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,14 +27,14 @@ public class SessionServiceTest {
     @Mock UserRepository userRepository;
     @InjectMocks SessionService sessionService;
 
-    Session mockSession=Session.builder()
+    final Session mockSession=Session.builder()
             .id(42L)
             .name("mock Session")
             .date(new Date())
             .description("The mockest session")
             .users(new ArrayList<>())
             .build();
-    User mockUser=User.builder()
+    final User mockUser=User.builder()
             .id(999L)
             .firstName("Tickle")
             .lastName("Monster")
@@ -43,6 +44,7 @@ public class SessionServiceTest {
             .build();
 
     @Test
+    @DisplayName("When I create a new session, it should call sessionRepo")
     public void testCreateNewSessionIsSaved() {
         //Given
         Session session=new Session();
@@ -55,6 +57,7 @@ public class SessionServiceTest {
     }
 
     @Test
+    @DisplayName("When I delete a session, it should call sessionRepo")
     public void testKillSessionIsDeleted() {
         //Given
 
@@ -66,6 +69,7 @@ public class SessionServiceTest {
     }
 
     @Test
+    @DisplayName("When I findAll sessions, it should call sessionRepo")
     public void testGetAllSessions() {
         //Given
 
@@ -77,6 +81,7 @@ public class SessionServiceTest {
     }
 
     @Test
+    @DisplayName("When I try to participate for not found session, it should throw NotFoundException")
     public void testParticipateThrowsExceptionWhenNotFound() {
         //Given
 
@@ -87,6 +92,7 @@ public class SessionServiceTest {
     }
 
     @Test
+    @DisplayName("When I update a session, it should call sessionRepo")
     public void testUpdateSessionSavesSession() {
         //Given
 
@@ -98,6 +104,7 @@ public class SessionServiceTest {
     }
 
     @Test
+    @DisplayName("When valid user tries to participate for valid session, it should call sessionRepo and userSession")
     public void testParticipateIsOkWhenUserAndSessionAreValid() {
         //Given
         when(sessionRepository.findById(42L)).thenReturn(Optional.of(mockSession));
@@ -112,16 +119,18 @@ public class SessionServiceTest {
     }
 
     @Test
+    @DisplayName("When I try to noLongerParticipate for not found session, it should throw NotFoundException")
     public void testNoLongerParticipateNotFoundThrowsException() {
         //Given
 
         //When
 
         //Then
-        assertThatThrownBy(()->sessionService.participate(1L,42L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(()->sessionService.noLongerParticipate(1L,42L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test
+    @DisplayName("When invalid user try to noLongerParticipate for valid session, it should throw BadRequestException")
     public void testNoLongerParticipateThrowsBadRequestException() {
         //Given
         when(sessionRepository.findById(42L)).thenReturn(Optional.of(mockSession));
@@ -133,6 +142,7 @@ public class SessionServiceTest {
     }
 
     @Test
+    @DisplayName("WhenI try to noLongerParticipate valid session, it should call sessionRepo")
     public void testNoLongerParticipateIsOkWithCorrectCredential() {
         //Given
         List<User>users=new ArrayList<>();

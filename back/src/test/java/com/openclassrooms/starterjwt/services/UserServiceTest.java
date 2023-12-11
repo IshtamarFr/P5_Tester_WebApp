@@ -2,6 +2,7 @@ package com.openclassrooms.starterjwt.services;
 
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,9 +21,16 @@ public class UserServiceTest {
     @InjectMocks UserService userService;
 
     @Test
+    @DisplayName("When I findById valid user, it should return mock and call userRepo")
     public void testFindValidUserById() {
         //Given
-        User mockUser=new User("test@test.com","Nom","Prenom","123456",true);
+        User mockUser=User.builder()
+                .email("test@test.com")
+                .firstName("Prenom")
+                .lastName("Nom")
+                .password("123456")
+                .admin(true)
+                .build();
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
 
@@ -35,6 +43,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("When I delete user, it should call user repo")
     public void testDeleteExistingUserById() {
         //Given
 

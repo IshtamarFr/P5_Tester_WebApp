@@ -2,6 +2,7 @@ package com.openclassrooms.starterjwt.services;
 
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.repository.TeacherRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,6 +34,7 @@ public class TeacherServiceTest {
     final List<Teacher> teachers= Arrays.asList(teacherOne,teacherTwo);
 
     @Test
+    @DisplayName("When I findAll teachers, it should return mock list and call teacherRepo")
     public void testFindAllTeachers() {
         //Given
         when(teacherRepository.findAll()).thenReturn(teachers);
@@ -46,6 +48,7 @@ public class TeacherServiceTest {
     }
 
     @Test
+    @DisplayName("When I findById valid teacher, it should return mock teacher and call teacherRepo")
     public void testFindValidTeacherById() {
         //Given
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teachers.get(1)));
