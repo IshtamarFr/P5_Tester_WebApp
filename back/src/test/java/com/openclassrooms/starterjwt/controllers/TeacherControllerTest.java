@@ -2,6 +2,7 @@ package com.openclassrooms.starterjwt.controllers;
 
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.services.TeacherService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,6 +43,7 @@ public class TeacherControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests all teachers, request is OK, mocks are served and teacherService is called")
     public void testGetAllTeachersIsOkAndCallService() throws Exception {
         //Given
         when(teacherService.findAll()).thenReturn(teachers);
@@ -58,6 +60,7 @@ public class TeacherControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get one teacher, request is OK, mock is served and teacherService is called")
     public void testGetTeacherByIdIsOkAndCallService() throws Exception {
         //Given
         when(teacherService.findById(682L)).thenReturn(mockTeacher2);
@@ -72,6 +75,7 @@ public class TeacherControllerTest {
     }
 
     @Test
+    @DisplayName("When unAuth user requests get one teacher, request is Unauthorized")
     public void testGetTeacherByIdIsUnauthorized() throws Exception {
         //Given
 
@@ -84,6 +88,7 @@ public class TeacherControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get inexistant teacher, request is NotFound and teacherService is called")
     public void testGetTeacherAsNullIsNotFoundAndDontCallService() throws Exception {
         //Given
         when(teacherService.findById(9999L)).thenReturn(null);
@@ -98,6 +103,7 @@ public class TeacherControllerTest {
 
     @Test
     @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get one NaN teacher, request is BadRequest and no service is called")
     public void testGetTeacherAsNaNIsBadRequestAndDontCallService() throws Exception {
         //Given
 
