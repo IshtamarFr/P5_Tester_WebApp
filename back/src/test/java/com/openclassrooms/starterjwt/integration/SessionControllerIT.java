@@ -45,7 +45,8 @@ public class SessionControllerIT {
     SessionMapper sessionMapper;
 
     private final BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-    final ObjectMapper mapper=new ObjectMapper();
+
+    ObjectMapper mapper=new ObjectMapper();
 
     final Teacher mockTeacher=Teacher.builder()
             .firstName("mockFN")
@@ -66,15 +67,6 @@ public class SessionControllerIT {
             .teacher(mockTeacher)
             .description("The mockest session")
             .createdAt(LocalDateTime.now())
-            .build();
-
-    final SessionDto mockWannabeSession=SessionDto.builder()
-            .name("Saucession")
-            .date(new Date())
-            .teacher_id(mockTeacher.getId())
-            .description("I wanna be the very best like no one ever was")
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
             .build();
 
     @AfterEach
@@ -214,7 +206,7 @@ public class SessionControllerIT {
         //When
         this.mockMvc.perform(delete("/api/session/"+mockSessionId))
 
-                //Then
+        //Then
                 .andExpect(status().isNotFound());
     }
 
@@ -233,7 +225,7 @@ public class SessionControllerIT {
         //Then
                 .andExpect(status().isBadRequest());
 
-        //Or When
+        //And When
         this.mockMvc.perform(post("/api/session/n378d/participate/"+mockUserId))
 
         //Then
@@ -263,13 +255,21 @@ public class SessionControllerIT {
     }
 
     @Test
-    @WithMockUser(roles="USER")
     @DisplayName("When auth user creates a new session, it is OK and returns created session")
     public void testCreateNewSessionWithSuccess() throws Exception {
         //Given
         userRepository.save(mockUser);
         teacherRepository.save(mockTeacher);
         sessionRepository.save(mockSession);
+
+        SessionDto mockWannabeSession=SessionDto.builder()
+                .name("Saucession")
+                .date(new Date())
+                .teacher_id(mockTeacher.getId())
+                .description("I wanna be the very best like no one ever was")
+                .build();
+
+        System.out.println(mockWannabeSession);
 
         //When
         this.mockMvc.perform(post("/api/session").with(user("scp999@scpfundation.com"))
@@ -281,6 +281,34 @@ public class SessionControllerIT {
                 .andExpect(content().string(containsString("very best like")));
         assertThat(sessionRepository.findAll().size()).isEqualTo(2);
         assertThat(sessionRepository.findAll()).contains(mockSession);
+    }
 
+    @Test
+    @DisplayName("When auth user modifies a new session, it is OK and overwrites initial session")
+    public void testModifySessionWithSuccess() throws Exception {
+        //Given
+        userRepository.save(mockUser);
+        teacherRepository.save(mockTeacher);
+        long mockSessionId = sessionRepository.save(mockSession).getId();
+
+        SessionDto mockWannabeSession = SessionDto.builder()
+                .id(mockSessionId)
+                .name("Saucession")
+                .date(new Date())
+                .teacher_id(mockTeacher.getId())
+                .description("I wanna be the very best like no one ever was")
+                .build();
+
+        System.out.println(mockWannabeSession);
+
+        //When
+        this.mockMvc.perform(put("/api/session/" + mockSessionId).with(user("scp999@scpfundation.com"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(mockWannabeSession)))
+
+                //Then
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("very best like")));
+        assertThat(sessionRepository.findAll().size()).isEqualTo(1);
     }
 }
