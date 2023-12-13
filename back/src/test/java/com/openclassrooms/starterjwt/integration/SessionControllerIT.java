@@ -1,6 +1,7 @@
 package com.openclassrooms.starterjwt.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.mapper.SessionMapper;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,6 +25,7 @@ import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -63,6 +66,15 @@ public class SessionControllerIT {
             .teacher(mockTeacher)
             .description("The mockest session")
             .createdAt(LocalDateTime.now())
+            .build();
+
+    final SessionDto mockWannabeSession=SessionDto.builder()
+            .name("Saucession")
+            .date(new Date())
+            .teacher_id(mockTeacher.getId())
+            .description("I wanna be the very best like no one ever was")
+            .createdAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
             .build();
 
     @AfterEach
@@ -155,7 +167,7 @@ public class SessionControllerIT {
         //When
         this.mockMvc.perform(get("/api/session/Zza123"))
 
-                //Then
+        //Then
                 .andExpect(status().isBadRequest());
     }
 
@@ -166,12 +178,109 @@ public class SessionControllerIT {
         //Given
         userRepository.save(mockUser);
         teacherRepository.save(mockTeacher);
-        Long mockSessionId=sessionRepository.save(mockSession).getId()+1;
+        long mockSessionId=sessionRepository.save(mockSession).getId()+1;
 
         //When
         this.mockMvc.perform(get("/api/session/"+mockSessionId))
 
         //Then
                 .andExpect(status().isNotFound());
+    }
+    @Test
+    @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests delete NaN session, response is BadRequest")
+    public void testDeleteSessionAsNaNIsBadRequest() throws Exception {
+        //Given
+        userRepository.save(mockUser);
+        teacherRepository.save(mockTeacher);
+        sessionRepository.save(mockSession);
+
+        //When
+        this.mockMvc.perform(delete("/api/session/Zvn98a"))
+
+        //Then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles="USER")
+    @DisplayName("When auth requests delete inexistant session, response is NotFound")
+    public void testDeleteSessionAsNullIsNotFound() throws Exception {
+        //Given
+        userRepository.save(mockUser);
+        teacherRepository.save(mockTeacher);
+        long mockSessionId=sessionRepository.save(mockSession).getId()+1;
+
+        //When
+        this.mockMvc.perform(delete("/api/session/"+mockSessionId))
+
+                //Then
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests participate NaN session, response is BadRequest")
+    public void testParticipateSessionAsNaNIsBadRequest() throws Exception {
+        //Given
+        Long mockUserId=userRepository.save(mockUser).getId();
+        teacherRepository.save(mockTeacher);
+        Long mockSessionId=sessionRepository.save(mockSession).getId();
+
+        //When
+        this.mockMvc.perform(post("/api/session/"+mockSessionId+"/participate/Znv3"))
+
+        //Then
+                .andExpect(status().isBadRequest());
+
+        //Or When
+        this.mockMvc.perform(post("/api/session/n378d/participate/"+mockUserId))
+
+        //Then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests unParticipate NaN session, response is BadRequest")
+    public void testUnParticipateSessionAsNaNIsBadRequest() throws Exception {
+        //Given
+        Long mockUserId=userRepository.save(mockUser).getId();
+        teacherRepository.save(mockTeacher);
+        Long mockSessionId=sessionRepository.save(mockSession).getId();
+
+        //When
+        this.mockMvc.perform(delete("/api/session/"+mockSessionId+"/participate/Znv3"))
+
+        //Then
+                .andExpect(status().isBadRequest());
+
+        //Or When
+        this.mockMvc.perform(delete("/api/session/n378d/participate/"+mockUserId))
+
+        //Then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles="USER")
+    @DisplayName("When auth user creates a new session, it is OK and returns created session")
+    public void testCreateNewSessionWithSuccess() throws Exception {
+        //Given
+        userRepository.save(mockUser);
+        teacherRepository.save(mockTeacher);
+        sessionRepository.save(mockSession);
+
+        //When
+        this.mockMvc.perform(post("/api/session").with(user("scp999@scpfundation.com"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(mockWannabeSession)))
+
+        //Then
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("very best like")));
+        assertThat(sessionRepository.findAll().size()).isEqualTo(2);
+        assertThat(sessionRepository.findAll()).contains(mockSession);
+
     }
 }
