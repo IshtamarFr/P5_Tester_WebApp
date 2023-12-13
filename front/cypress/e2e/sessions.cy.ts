@@ -92,7 +92,7 @@ describe('Sessions spec', () => {
 
     //Then
     cy.get('.create-button').should('exist');
-    cy.get('.create-button').should('exist');
+    cy.get('.detail-button').should('exist');
     cy.get('.edit-button').should('exist');
   });
 

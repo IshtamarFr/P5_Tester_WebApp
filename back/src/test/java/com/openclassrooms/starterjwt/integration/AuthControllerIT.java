@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -41,18 +42,14 @@ public class AuthControllerIT {
 
     @AfterEach
     void clean(){
-        userRepository.findByEmail("987654321@test.com").ifPresent(user -> userRepository.deleteById(user.getId()));
+        userRepository.deleteAll();
     }
 
     @Test
     @DisplayName("When I request login with correct credentials, response is OK and returns correct data")
     public void testLoginUserWorksWithCorrectCredential() throws Exception {
         //Given
-        try {
-            userRepository.save(testUser);
-        } catch (Exception e) {
-            //ignore
-        }
+        userRepository.save(testUser);
 
         LoginRequest loginRequest=LoginRequest.builder()
                 .email("987654321@test.com")
@@ -68,6 +65,8 @@ public class AuthControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("LN")))
                 .andExpect(content().string(containsString("false")));
+
+        assertThat(userRepository.findByEmail("987654321@test.com").isPresent()).isTrue();
     }
 
     @Test
@@ -88,17 +87,14 @@ public class AuthControllerIT {
 
         //Then
                 .andExpect(status().isOk());
+        assertThat(userRepository.findByEmail("987654321@test.com").isPresent()).isTrue();
     }
 
     @Test
     @DisplayName("When I request register but email is already taken, response is BadRequest and returns message")
     public void testRegisterUserDontWorkIfEmailIsAlreadyTaken() throws Exception {
         //Given
-        try {
-            userRepository.save(testUser);
-        } catch (Exception e) {
-            //ignore
-        }
+        userRepository.save(testUser);
 
         SignupRequest signupRequest= SignupRequest.builder()
                 .email("987654321@test.com")

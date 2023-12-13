@@ -13,11 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
@@ -72,12 +70,14 @@ public class SessionServiceTest {
     @DisplayName("When I findAll sessions, it should call sessionRepo")
     public void testGetAllSessions() {
         //Given
+        when(sessionRepository.findAll()).thenReturn(Collections.singletonList(mockSession));
 
         //When
         List<Session> sessions=sessionService.findAll();
 
         //Then
         verify(sessionRepository,times(1)).findAll();
+        assertThat(sessions.size()).isEqualTo(1);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class SessionServiceTest {
         //Given
 
         //When
-        Session session=sessionService.update(73L,mockSession);
+        sessionService.update(73L,mockSession);
 
         //Then
         verify(sessionRepository,times(1)).save(mockSession);

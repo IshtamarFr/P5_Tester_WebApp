@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -32,7 +32,6 @@ public class UserControllerIT {
     private final BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
 
     final ObjectMapper mapper=new ObjectMapper();
-    Long testUserId;
 
     final private User testUser=User.builder()
             .email("987654321@test.com")
@@ -41,22 +40,9 @@ public class UserControllerIT {
             .firstName("MockFN")
             .build();
 
-    @BeforeEach
-    void init() {
-        try {
-            testUserId = userRepository.save(testUser).getId();
-        } catch (Exception e) {
-            //ignore
-        }
-    }
-
     @AfterEach
     void clean(){
-        try {
-            userRepository.deleteById(testUserId);
-        } catch (Exception e) {
-            //ignore
-        }
+        userRepository.deleteAll();
     }
 
     @Test
@@ -77,6 +63,9 @@ public class UserControllerIT {
     @Test
     @DisplayName("When unAuthorized user requests get one user, response is unAuthorized")
     public void testDeleteUserByIdIsRejected() throws Exception {
+        //Given
+        Long testUserId=userRepository.save(testUser).getId();
+
         //When
         this.mockMvc.perform(delete("/api/user/"+testUserId))
 
@@ -87,8 +76,11 @@ public class UserControllerIT {
     @Test
     @DisplayName("When unAuthorized user requests delete one user, response is unAuthorized")
     public void testDeleteUserByIdIsRejectedWhenUserIsNotValid() throws Exception {
+        //Given
+        Long testUserId=userRepository.save(testUser).getId();
+
         //When
-        this.mockMvc.perform(delete("/api/user/"+testUserId).with(user("yoga@studio.com")))
+        this.mockMvc.perform(delete("/api/user/"+testUserId).with(user("abc@def.com")))
 
         //Then
                 .andExpect(status().isUnauthorized());
@@ -97,10 +89,14 @@ public class UserControllerIT {
     @Test
     @DisplayName("When auth user requests delete one user, response is OK")
     public void testDeleteUserByIdWorksWhenUserIsValid() throws Exception {
+        //Given
+        Long testUserId=userRepository.save(testUser).getId();
+
         //When
         this.mockMvc.perform(delete("/api/user/"+testUserId).with(user("987654321@test.com")))
 
         //Then
                 .andExpect(status().isOk());
+        assertThat(userRepository.findByEmail("987654321@test.com").isPresent()).isFalse();
     }
 }
