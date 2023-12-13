@@ -88,4 +88,17 @@ public class TeacherControllerIT {
         //Then
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get NaN teacher, response is BadRequest")
+    public void testGetTeacherAsNaNIsBadRequest() throws Exception {
+        //Given
+
+        //When
+        this.mockMvc.perform(get("/api/teacher/7a2D@!-1"))
+
+                //Then
+                .andExpect(status().isBadRequest());
+    }
 }

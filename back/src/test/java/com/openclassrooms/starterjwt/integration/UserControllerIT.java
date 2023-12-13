@@ -99,4 +99,54 @@ public class UserControllerIT {
                 .andExpect(status().isOk());
         assertThat(userRepository.findByEmail("987654321@test.com").isPresent()).isFalse();
     }
+
+    @Test
+    @DisplayName("When auth user requests delete NaN user, response is BadRequest")
+    public void testDeleteNaNUserIsBadRequest() throws Exception {
+        //Given
+
+        //When
+        this.mockMvc.perform(delete("/api/user/1A7-2w").with(user("987654321@test.com")))
+
+        //Then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("When auth user requests get NaN user, response is BadRequest")
+    public void testGetNaNUserIsBadRequest() throws Exception {
+        //Given
+
+        //When
+        this.mockMvc.perform(get("/api/user/Aa1234!").with(user("987654321@test.com")))
+
+                //Then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("When auth user requests get nonExistant user, response is NotFound")
+    public void testGetNullUserIsNotFound() throws Exception {
+        //Given
+        long testUserId=userRepository.save(testUser).getId()+1;
+
+        //When
+        this.mockMvc.perform(get("/api/user/"+testUserId).with(user("987654321@test.com")))
+
+                //Then
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("When auth user requests delete nonExistant user, response is NotFound")
+    public void testDeleteNullUserIsNotFound() throws Exception {
+        //Given
+        long testUserId=userRepository.save(testUser).getId()+1;
+
+        //When
+        this.mockMvc.perform(delete("/api/user/"+testUserId).with(user("987654321@test.com")))
+
+                //Then
+                .andExpect(status().isNotFound());
+    }
 }

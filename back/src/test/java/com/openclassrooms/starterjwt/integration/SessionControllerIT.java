@@ -142,4 +142,36 @@ public class SessionControllerIT {
         assertThat(sessionRepository.findById(mockSessionId).isPresent()).isTrue();
         assertThat(sessionRepository.findById(mockSessionId).get().getUsers().contains(mockUser)).isTrue();
     }
+
+    @Test
+    @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get NaN session, response is BadRequest")
+    public void testGetSessionAsNanIsBadRequest() throws Exception {
+        //Given
+        userRepository.save(mockUser);
+        teacherRepository.save(mockTeacher);
+        sessionRepository.save(mockSession);
+
+        //When
+        this.mockMvc.perform(get("/api/session/Zza123"))
+
+                //Then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests get inexistant session, response is NotFound")
+    public void testGetSessionAsNullIsNotFound() throws Exception {
+        //Given
+        userRepository.save(mockUser);
+        teacherRepository.save(mockTeacher);
+        Long mockSessionId=sessionRepository.save(mockSession).getId()+1;
+
+        //When
+        this.mockMvc.perform(get("/api/session/"+mockSessionId))
+
+        //Then
+                .andExpect(status().isNotFound());
+    }
 }
