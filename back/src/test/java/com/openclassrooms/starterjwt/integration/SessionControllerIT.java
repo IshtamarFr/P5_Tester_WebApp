@@ -225,7 +225,7 @@ public class SessionControllerIT {
         //Then
                 .andExpect(status().isBadRequest());
 
-        //And When
+        //Or When
         this.mockMvc.perform(post("/api/session/n378d/participate/"+mockUserId))
 
         //Then
@@ -310,5 +310,31 @@ public class SessionControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("very best like")));
         assertThat(sessionRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    @WithMockUser(roles="USER")
+    @DisplayName("When auth user requests put NaN session, response is BadRequest")
+    public void testPutSessionAsNaNIsBadRequest() throws Exception {
+        //Given
+        userRepository.save(mockUser);
+        teacherRepository.save(mockTeacher);
+        long mockSessionId=sessionRepository.save(mockSession).getId();
+
+        SessionDto mockWannabeSession = SessionDto.builder()
+                .id(mockSessionId)
+                .name("Saucession")
+                .date(new Date())
+                .teacher_id(mockTeacher.getId())
+                .description("I wanna be the very best like no one ever was")
+                .build();
+
+        //When
+        this.mockMvc.perform(put("/api/session/Zvn98a")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(mockWannabeSession)))
+
+        //Then
+                .andExpect(status().isBadRequest());
     }
 }
