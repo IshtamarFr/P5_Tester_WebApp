@@ -2,7 +2,6 @@ package com.openclassrooms.starterjwt.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.starterjwt.dto.SessionDto;
-import com.openclassrooms.starterjwt.mapper.SessionMapper;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.models.User;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -41,12 +39,9 @@ public class SessionControllerIT {
     UserRepository userRepository;
     @Autowired
     SessionRepository sessionRepository;
+
     @Autowired
-    SessionMapper sessionMapper;
-
-    private final BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-
-    ObjectMapper mapper=new ObjectMapper();
+    ObjectMapper mapper;
 
     final Teacher mockTeacher=Teacher.builder()
             .firstName("mockFN")
@@ -58,7 +53,7 @@ public class SessionControllerIT {
             .lastName("Monster")
             .email("scp999@scpfundation.com")
             .admin(false)
-            .password(passwordEncoder.encode("999999"))
+            .password("999999")
             .build();
 
     final Session mockSession = Session.builder()
@@ -306,7 +301,7 @@ public class SessionControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(mockWannabeSession)))
 
-                //Then
+        //Then
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("very best like")));
         assertThat(sessionRepository.findAll().size()).isEqualTo(1);

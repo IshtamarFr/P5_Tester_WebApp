@@ -28,10 +28,10 @@ public class AuthControllerIT {
     private MockMvc mockMvc;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ObjectMapper mapper;
 
-    private final BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-
-    final ObjectMapper mapper=new ObjectMapper();
+    final private BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
 
     final User testUser=User.builder()
             .email("987654321@test.com")

@@ -1,6 +1,5 @@
 package com.openclassrooms.starterjwt.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,13 +27,9 @@ public class UserControllerIT {
     @Autowired
     private UserRepository userRepository;
 
-    private final BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-
-    final ObjectMapper mapper=new ObjectMapper();
-
     final private User testUser=User.builder()
             .email("987654321@test.com")
-            .password(passwordEncoder.encode("Aa123456!"))
+            .password("Aa123456!")
             .lastName("MockLN")
             .firstName("MockFN")
             .build();
